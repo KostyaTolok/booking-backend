@@ -19,6 +19,7 @@ async def on_message(message: AbstractIncomingMessage) -> None:
 
 
 async def main() -> None:
+    # TODO retry connection
     connection = await connect(config.RABBITMQ_URL)
 
     async with connection:

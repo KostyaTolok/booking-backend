@@ -12,7 +12,9 @@ load_dotenv()
 class Config(BaseSettings):
     ENV: str = None
     DEBUG: bool = None
+    ROOT_PATH: str = "/users"
     API_PREFIX: str = "/api"
+    API_CURRENT_VERSION: str = "v1"
     APP_HOST: str = "0.0.0.0"
     APP_PORT: int = 8001
 
@@ -40,7 +42,7 @@ class Config(BaseSettings):
             user=values.get("DB_USER"),
             password=values.get("DB_PASS"),
             host=values.get("DB_HOST"),
-            port=values.get("DB_PORT"),
+            port=os.getenv("POSTGRES_PORT"),
             path=f"/{values.get('DB_NAME') or ''}",
         )
 

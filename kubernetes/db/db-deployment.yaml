@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: db
+  name: db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: db
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        service: db
+    spec:
+      containers:
+        - image: postgres:12.0-alpine
+          name: db
+          envFrom:
+            - configMapRef:
+                name: env
+          ports:
+            - containerPort: 5432
+          resources: {}
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data/
+              name: postgres-db
+      restartPolicy: Always
+      volumes:
+        - name: postgres-db
+          persistentVolumeClaim:
+            claimName: postgres-db
+status: {}

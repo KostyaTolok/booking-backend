@@ -1,0 +1,23 @@
+apiVersion: v1
+data:
+  ADMIN_PASS: "123456"
+  ADMIN_USER: root
+  ENV: dev
+  POSTGRES_DB: postgres
+  POSTGRES_HOST: db
+  POSTGRES_PASSWORD: 123456aa
+  POSTGRES_PORT: "5432"
+  POSTGRES_USER: root
+  RABBITMQ_HOST: rabbitmq
+  RABBITMQ_PASSWORD: guest
+  RABBITMQ_PORT: "5672"
+  RABBITMQ_USER: guest
+  REDIS_HOST: redis
+  REDIS_PORT: "6379"
+  SECRET_KEY: nvggyrKzHdaQ1pIORefYsWhKtfP>RLrgGib0aejes>YyukYuLHC0thLO577kO
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  labels:
+    service: db-env
+  name: env
