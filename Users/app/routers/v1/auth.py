@@ -3,11 +3,11 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
 from app import schemas
-from app.api import dependencies
+from app.routers import dependencies
 from app.services.login import AuthService
 from app.services.user import UserService
 
-router = APIRouter()
+router = APIRouter(tags=["login"])
 
 
 @router.post("/login", response_model=schemas.Token)

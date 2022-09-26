@@ -6,10 +6,10 @@ from pydantic.networks import EmailStr
 from sqlalchemy.orm import Session
 
 from app import models, schemas
-from app.api import dependencies
+from app.routers import dependencies
 from app.services.user import UserService
 
-router = APIRouter()
+router = APIRouter(tags=["users"])
 
 
 @router.get("/", response_model=List[schemas.User])

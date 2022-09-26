@@ -5,6 +5,8 @@ services:
     build: Notifications/
     env_file:
       - .env
+    volumes:
+      - "./Notifications/app:/app"
     depends_on:
       rabbitmq:
         condition: "service_healthy"
@@ -16,6 +18,8 @@ services:
       - .env
     ports:
       - "8000:8000"
+    volumes:
+      - "./Users:/app"
     depends_on:
       db:
         condition: "service_started"

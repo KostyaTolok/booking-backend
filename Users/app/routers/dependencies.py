@@ -12,7 +12,7 @@ from app.services.login import AuthService
 from app.services.user import UserService
 
 reusable_oauth2 = OAuth2PasswordBearer(
-    tokenUrl=f"{config.API_V1_STR}/auth/login"
+    tokenUrl=f"{config.API_PREFIX}/auth/login"
 )
 
 
