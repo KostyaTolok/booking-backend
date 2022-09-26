@@ -12,7 +12,7 @@ load_dotenv()
 class Config(BaseSettings):
     ENV: str = None
     DEBUG: bool = None
-    API_V1_STR: str = "/api/v1"
+    API_PREFIX: str = "/api"
     APP_HOST: str = "0.0.0.0"
     APP_PORT: int = 8001
 

@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from starlette.middleware.cors import CORSMiddleware
 
-from app.api.api_v1.router import api_router
+from app.routers import router as api_router
 from app.core.config import config
 from app.core.exceptions import CustomException
 
@@ -27,4 +27,4 @@ if config.BACKEND_CORS_ORIGINS:
         allow_headers=["*"],
     )
 
-app.include_router(api_router, prefix=config.API_V1_STR)
+app.include_router(api_router, prefix=config.API_PREFIX)

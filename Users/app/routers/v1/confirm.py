@@ -2,11 +2,11 @@ from fastapi import APIRouter, Body, Depends
 from sqlalchemy.orm import Session
 
 from app import schemas, models
-from app.api import dependencies
+from app.routers import dependencies
 from app.services.confirm import ConfirmService
 from app.services.user import UserService
 
-router = APIRouter()
+router = APIRouter(tags=["confirm"])
 
 
 @router.post("/recover-password/{email}", response_model=schemas.Message)
