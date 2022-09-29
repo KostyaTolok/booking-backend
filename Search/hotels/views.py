@@ -7,8 +7,12 @@ from hotels.serializers import HotelSerializer, HotelListSerializer
 from search.permissions import IsAdmin, IsAuthenticated
 
 
-class HotelsViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.CreateModelMixin, mixins.UpdateModelMixin,
-                    mixins.DestroyModelMixin, viewsets.GenericViewSet):
+class HotelsViewSet(mixins.ListModelMixin,
+                    mixins.RetrieveModelMixin,
+                    mixins.CreateModelMixin,
+                    mixins.UpdateModelMixin,
+                    mixins.DestroyModelMixin,
+                    viewsets.GenericViewSet):
     serializer_classes = {
         'list': HotelListSerializer,
         'retrieve': HotelSerializer,
@@ -17,14 +21,15 @@ class HotelsViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.Cre
         'destroy': HotelSerializer,
     }
     permission_classes = {
-        'list': (IsAuthenticated(),),
-        'retrieve': (IsAuthenticated(),),
-        'create': (IsAdmin(),),
-        'update': (IsAdmin(),),
-        'destroy': (IsAdmin(),),
+        'list': (IsAuthenticated,),
+        'retrieve': (IsAuthenticated,),
+        'create': (IsAdmin,),
+        'update': (IsAdmin,),
+        'destroy': (IsAdmin,),
     }
     queryset = Hotel.objects.all().distinct()
     default_serializer_class = HotelSerializer
+    default_permission_classes = (IsAuthenticated,)
     filter_backends = (DjangoFilterBackend,)
     filterset_class = HotelFilter
 
@@ -32,4 +37,4 @@ class HotelsViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.Cre
         return self.serializer_classes.get(self.action, self.default_serializer_class)
 
     def get_permissions(self):
-        return self.permission_classes.get(self.action, (IsAuthenticated(),))
+        return (permission() for permission in self.permission_classes.get(self.action, self.default_permission_classes))

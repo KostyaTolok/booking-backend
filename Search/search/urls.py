@@ -10,12 +10,13 @@ schema_view = get_schema_view(
       default_version='v1'
    ),
    public=True,
-   permission_classes=[AllowAny],
+   permission_classes=(AllowAny,),
 )
 
 urlpatterns = [
     re_path(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('admin/', admin.site.urls),
     path('api/hotels/', include('hotels.urls')),
-    path('api/rooms/', include('rooms.urls'))
+    path('api/rooms/', include('rooms.urls')),
+    path('api/images/', include('images.urls'))
 ]

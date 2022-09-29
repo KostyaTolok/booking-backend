@@ -27,4 +27,4 @@ class IsAdmin(BasePermission):
 
         role = payload.get("role", None)
 
-        return role.lower() == Roles.ADMIN.name.lower()
+        return role == Roles.ADMIN.value

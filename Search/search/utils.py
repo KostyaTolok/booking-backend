@@ -1,7 +1,6 @@
-from enum import Enum
-
 import jwt
 from django.conf import settings
+from django.db import models
 from rest_framework.exceptions import AuthenticationFailed
 
 
@@ -16,7 +15,7 @@ def decode_token(jwt_token):
         raise AuthenticationFailed("Authorization has failed")
 
 
-class Roles(Enum):
-    ADMIN = 1
-    USER = 2
+class Roles(models.TextChoices):
+    ADMIN = "admin"
+    USER = "user"
 

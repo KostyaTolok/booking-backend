@@ -7,8 +7,12 @@ from rooms.serializers import RoomListSerializer, RoomSerializer
 from search.permissions import IsAuthenticated, IsAdmin
 
 
-class RoomsViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.CreateModelMixin, mixins.UpdateModelMixin,
-                   mixins.DestroyModelMixin, viewsets.GenericViewSet):
+class RoomsViewSet(mixins.ListModelMixin,
+                   mixins.RetrieveModelMixin,
+                   mixins.CreateModelMixin,
+                   mixins.UpdateModelMixin,
+                   mixins.DestroyModelMixin,
+                   viewsets.GenericViewSet):
     serializer_classes = {
         'list': RoomListSerializer,
         'retrieve': RoomSerializer,
@@ -17,14 +21,15 @@ class RoomsViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.Crea
         'destroy': RoomSerializer,
     }
     permission_classes = {
-        'list': (IsAuthenticated(),),
-        'retrieve': (IsAuthenticated(),),
-        'create': (IsAdmin(),),
-        'update': (IsAdmin(),),
-        'destroy': (IsAdmin(),),
+        'list': (IsAuthenticated,),
+        'retrieve': (IsAuthenticated,),
+        'create': (IsAdmin,),
+        'update': (IsAdmin,),
+        'destroy': (IsAdmin,),
     }
     queryset = Room.objects.all()
     default_serializer_class = RoomSerializer
+    default_permission_classes = (IsAuthenticated,)
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RoomFilter
 
@@ -32,4 +37,4 @@ class RoomsViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.Crea
         return self.serializer_classes.get(self.action, self.default_serializer_class)
 
     def get_permissions(self):
-        return self.permission_classes.get(self.action, (IsAuthenticated(),))
+        return (permission() for permission in self.permission_classes.get(self.action, self.default_permission_classes))
