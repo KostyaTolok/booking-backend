@@ -12,7 +12,7 @@ load_dotenv()
 class Config(BaseSettings):
     ENV: str = None
     DEBUG: bool = None
-    ROOT_PATH: str = "/users"
+    ROOT_PATH: str = os.getenv("ROOT_PATH", "")
     API_PREFIX: str = "/api"
     API_CURRENT_VERSION: str = "v1"
     APP_HOST: str = "0.0.0.0"

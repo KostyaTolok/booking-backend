@@ -1,1 +1,1 @@
-kubectl delete -Rf kubernates/
+kubectl delete -Rf kubernetes/
