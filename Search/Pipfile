@@ -13,6 +13,7 @@ django-filter = "*"
 django-cors-headers = "*"
 aio-pika = "*"
 pillow = "*"
+drf-yasg = "*"
 
 [dev-packages]
 

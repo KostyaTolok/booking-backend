@@ -12,7 +12,7 @@ EQUIPMENT_STATES = {
 class RoomFilter(django_filters.FilterSet):
     name = filters.CharFilter(lookup_expr="icontains")
     price = filters.RangeFilter()
-    beds_number = filters.NumberFilter()
+    beds_number = filters.NumberFilter(lookup_expr="gte")
     has_washing_machine = filters.BooleanFilter()
     has_kitchen = filters.BooleanFilter()
     equipment_state = filters.ChoiceFilter(choices=EQUIPMENT_STATES)
