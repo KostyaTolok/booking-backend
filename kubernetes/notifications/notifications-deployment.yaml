@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: notifications
+  name: notifications
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: notifications
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        service: notifications
+    spec:
+      containers:
+        - image: notifications
+          imagePullPolicy: Never
+          name: notifications
+          envFrom:
+            - configMapRef:
+                name: env
+          ports:
+            - containerPort: 80
+          resources: {}
+      restartPolicy: Always
+status: {}

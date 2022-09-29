@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: users
+  name: users
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: users
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        service: users
+    spec:
+      containers:
+        - image: users
+          imagePullPolicy: Never
+          name: users
+          envFrom:
+            - configMapRef:
+                name: env
+          ports:
+            - containerPort: 8000
+      restartPolicy: Always
+status: {}
