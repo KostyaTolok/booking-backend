@@ -4,14 +4,14 @@ from rest_framework import mixins, viewsets
 from rooms.filters import RoomFilter
 from rooms.models import Room
 from rooms.serializers import RoomListSerializer, RoomSerializer
-from search.mixins import SerializerPermissionsMixin
-from search.permissions import IsAuthenticated, IsAdmin
+from common.mixins import SerializerPermissionsMixin
+from common.permissions import IsAuthenticated, IsAdmin
 
 
 class RoomsViewSet(
     mixins.ListModelMixin,
-    mixins.RetrieveModelMixin,
     mixins.CreateModelMixin,
+    mixins.RetrieveModelMixin,
     mixins.UpdateModelMixin,
     mixins.DestroyModelMixin,
     SerializerPermissionsMixin,
@@ -36,4 +36,3 @@ class RoomsViewSet(
     default_permission_classes = (IsAuthenticated,)
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RoomFilter
-

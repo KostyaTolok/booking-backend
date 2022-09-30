@@ -1,7 +1,7 @@
 import django_filters
 from django_filters import rest_framework as filters
 
-from rooms.models import EquipmentStates
+from common.choices import EquipmentStates
 
 
 class RoomFilter(django_filters.FilterSet):

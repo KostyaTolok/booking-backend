@@ -1,18 +1,17 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, mixins
-from rest_framework.permissions import AllowAny
 
 from hotels.filters import HotelFilter
 from hotels.models import Hotel
 from hotels.serializers import HotelSerializer, HotelListSerializer
-from search.permissions import IsAdmin, IsAuthenticated
-from search.mixins import SerializerPermissionsMixin
+from common.permissions import IsAdmin, IsAuthenticated
+from common.mixins import SerializerPermissionsMixin
 
 
 class HotelsViewSet(
     mixins.ListModelMixin,
-    mixins.RetrieveModelMixin,
     mixins.CreateModelMixin,
+    mixins.RetrieveModelMixin,
     mixins.UpdateModelMixin,
     mixins.DestroyModelMixin,
     SerializerPermissionsMixin,

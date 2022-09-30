@@ -1,6 +1,7 @@
 from rest_framework.permissions import BasePermission
 
-from search.utils import decode_token, Roles
+from common.utils import decode_token
+from common.choices import Roles
 
 
 class IsAuthenticated(BasePermission):
