@@ -18,5 +18,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/hotels/', include('hotels.urls')),
     path('api/rooms/', include('rooms.urls')),
-    path('api/images/', include('images.urls'))
+    path('api/images/', include('images.urls')),
+    path('api/cities/', include('cities.urls'))
 ]

@@ -11,3 +11,4 @@ class Hotel(models.Model):
     images = models.ManyToManyField('images.Image', related_name="hotels", blank=True)
 
     owner = models.PositiveIntegerField(verbose_name="Hotel owner")
+    city = models.ForeignKey('cities.City', verbose_name="Hotel city", on_delete=models.CASCADE, related_name="hotels")

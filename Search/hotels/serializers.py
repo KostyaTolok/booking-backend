@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
+from cities.serializer import CitySerializer
 from hotels.models import Hotel
-from rooms.serializers import RoomSerializer
 
 
 class HotelSerializer(serializers.ModelSerializer):
@@ -19,16 +19,28 @@ class HotelSerializer(serializers.ModelSerializer):
             "images",
             "description",
             "address",
+            "city",
             "rating",
             "has_parking",
             "has_wifi",
             "owner"
         )
 
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        serializer = CitySerializer(instance.city)
+        representation["city"] = serializer.data
+        return representation
+
 
 class HotelListSerializer(serializers.ModelSerializer):
-    rooms = RoomSerializer(many=True)
+    min_price = serializers.SerializerMethodField(allow_null=True)
 
     class Meta:
         model = Hotel
-        fields = ("id", "name", "images", "rating", "rooms")
+        fields = ("id", "name", "images", "rating", "min_price")
+
+    def get_min_price(self, obj):
+        prices = obj.rooms.all().values_list('price', flat=True)
+        min_price = min(prices) if len(prices) != 0 else None
+        return min_price
