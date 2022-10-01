@@ -34,9 +34,11 @@ if config.BACKEND_CORS_ORIGINS:
 @retry(Exception, tries=5, delay=3)
 def run_migrations():
     alembic_cfg = Config('alembic.ini')
+    alembic_cfg.set_main_option('sqlalchemy.url', config.DB_URL)
     command.upgrade(alembic_cfg, 'head')
 
 
+# TODO run_migrations() broke logs
 run_migrations()
 
 app.include_router(api_router, prefix=config.API_PREFIX)

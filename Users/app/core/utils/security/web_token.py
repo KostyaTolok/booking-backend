@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from typing import Any, Union
+from uuid import uuid4
 
 import jwt
 from passlib.context import CryptContext
@@ -7,7 +8,6 @@ from passlib.context import CryptContext
 from app.core.config import config
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
 
 ALGORITHM = "HS256"
 
@@ -23,14 +23,14 @@ def create_token(
         expire = datetime.utcnow() + timedelta(minutes=minutes)
 
     token_type = "refresh" if refresh else "access"
-    to_encode = {"exp": expire, "sub": str(subject), "type": token_type}
+    to_encode = {"jti": uuid4().hex, "exp": expire, "sub": str(subject), "type": token_type}
 
     encoded_jwt = jwt.encode(to_encode, config.SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
 
 def create_access_token(
-    subject: Union[str, Any], expires_delta: timedelta = None
+        subject: Union[str, Any], expires_delta: timedelta = None
 ) -> str:
     return create_token(subject, expires_delta, refresh=False)
 
@@ -51,11 +51,3 @@ def decode_token(token: str, refresh: bool = False) -> dict:
         raise jwt.InvalidTokenError
 
     return payload
-
-
-def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(plain_password, hashed_password)
-
-
-def get_password_hash(password: str) -> str:
-    return pwd_context.hash(password)

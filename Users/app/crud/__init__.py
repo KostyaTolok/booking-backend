@@ -1,1 +1,2 @@
-from .crud_user import user
+from .user import user
+from .blacklisted_token import blacklisted_token
