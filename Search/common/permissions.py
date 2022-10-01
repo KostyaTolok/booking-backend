@@ -5,7 +5,6 @@ from common.choices import Roles
 
 
 class IsAuthenticated(BasePermission):
-
     def has_permission(self, request, view):
         jwt_token = request.headers.get("Authorization", None)
 
@@ -17,7 +16,6 @@ class IsAuthenticated(BasePermission):
 
 
 class IsAdmin(BasePermission):
-
     def has_permission(self, request, view):
         jwt_token = request.headers.get("Authorization", None)
 

@@ -12,9 +12,4 @@ class HotelFilter(django_filters.FilterSet):
     price = filters.RangeFilter(field_name="rooms__price", distinct=True)
     owner = filters.NumberFilter()
     beds_number = filters.NumberFilter(field_name="rooms__beds_number", lookup_expr="gte", distinct=True)
-    order = filters.OrderingFilter(
-        fields=(
-            ('rating', 'rating'),
-            ('rooms__price', "price")
-        )
-    )
+    order = filters.OrderingFilter(fields=(('rating', 'rating'), ('rooms__price', "price")))

@@ -1,0 +1,11 @@
+[tool.black]
+skip-string-normalization=true
+line-length=120
+
+[tool.pycln]
+verbose=true
+all=true
+
+[tool.isort]
+profile = "black"
+line_length=120

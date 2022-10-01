@@ -15,7 +15,7 @@ class HotelsViewSet(
     mixins.UpdateModelMixin,
     mixins.DestroyModelMixin,
     SerializerPermissionsMixin,
-    viewsets.GenericViewSet
+    viewsets.GenericViewSet,
 ):
     serializer_classes = {
         'list': HotelListSerializer,
@@ -36,4 +36,3 @@ class HotelsViewSet(
     default_permission_classes = (IsAuthenticated,)
     filter_backends = (DjangoFilterBackend,)
     filterset_class = HotelFilter
-

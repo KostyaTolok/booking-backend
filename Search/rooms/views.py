@@ -15,7 +15,7 @@ class RoomsViewSet(
     mixins.UpdateModelMixin,
     mixins.DestroyModelMixin,
     SerializerPermissionsMixin,
-    viewsets.GenericViewSet
+    viewsets.GenericViewSet,
 ):
     serializer_classes = {
         'list': RoomListSerializer,
