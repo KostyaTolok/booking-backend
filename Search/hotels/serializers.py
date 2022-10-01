@@ -42,5 +42,5 @@ class HotelListSerializer(serializers.ModelSerializer):
 
     def get_min_price(self, obj):
         prices = obj.rooms.all().values_list('price', flat=True)
-        min_price = min(prices) if len(prices) != 0 else None
-        return min_price
+        if prices:
+            return min(prices)
