@@ -2,7 +2,8 @@ from rest_framework import mixins, viewsets
 
 from cities.models import City
 from cities.serializer import CitySerializer
-from common.permissions import IsAdmin
+from common.mixins import SerializerPermissionsMixin
+from common.permissions import IsAdmin, IsAuthenticated
 
 
 class CitiesViewSet(
@@ -11,8 +12,14 @@ class CitiesViewSet(
     mixins.RetrieveModelMixin,
     mixins.UpdateModelMixin,
     mixins.DestroyModelMixin,
+    SerializerPermissionsMixin,
     viewsets.GenericViewSet
 ):
-    serializer_class = CitySerializer
-    permission_classes = (IsAdmin,)
+    serializer_classes = {
+        'default': CitySerializer
+    }
+    permission_classes = {
+        'list': (IsAuthenticated,),
+        'default': (IsAdmin,)
+    }
     queryset = City.objects.all()

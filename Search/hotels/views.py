@@ -5,6 +5,7 @@ from common.mixins import SerializerPermissionsMixin
 from common.permissions import IsAdmin, IsAuthenticated
 from hotels.filters import HotelFilter
 from hotels.models import Hotel
+from hotels.permissions import IsHotelOwner
 from hotels.serializers import HotelSerializer, HotelListSerializer
 
 
@@ -29,11 +30,10 @@ class HotelsViewSet(
         'list': (IsAuthenticated,),
         'retrieve': (IsAuthenticated,),
         'create': (IsAdmin,),
-        'update': (IsAdmin,),
-        'destroy': (IsAdmin,),
+        'update': (IsAdmin, IsHotelOwner,),
+        'destroy': (IsAdmin, IsHotelOwner,),
         'default': (IsAuthenticated,)
     }
     queryset = Hotel.objects.all()
     filter_backends = (DjangoFilterBackend,)
     filterset_class = HotelFilter
-
