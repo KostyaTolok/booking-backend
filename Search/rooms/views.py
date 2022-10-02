@@ -30,8 +30,8 @@ class RoomsViewSet(
         'list': (IsAuthenticated,),
         'retrieve': (IsAuthenticated,),
         'create': (IsAdmin,),
-        'update': (IsAdmin, IsRoomOwner,),
-        'destroy': (IsAdmin, IsRoomOwner,),
+        'update': (IsAdmin | IsRoomOwner,),
+        'destroy': (IsAdmin | IsRoomOwner,),
         'default': (IsAuthenticated,)
     }
     queryset = Room.objects.all()

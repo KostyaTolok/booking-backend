@@ -30,8 +30,8 @@ class HotelsViewSet(
         'list': (IsAuthenticated,),
         'retrieve': (IsAuthenticated,),
         'create': (IsAdmin,),
-        'update': (IsAdmin, IsHotelOwner,),
-        'destroy': (IsAdmin, IsHotelOwner,),
+        'update': (IsAdmin | IsHotelOwner,),
+        'destroy': (IsAdmin | IsHotelOwner,),
         'default': (IsAuthenticated,)
     }
     queryset = Hotel.objects.all()
