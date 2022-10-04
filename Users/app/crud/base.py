@@ -18,6 +18,19 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     def get(self, db: Session, id: Any) -> Optional[ModelType]:
         return db.query(self.model).filter(self.model.id == id).first()
 
+    def get_or_create(self, db: Session, *, obj_in: CreateSchemaType):
+        obj_in_data = jsonable_encoder(obj_in)
+
+        instance = db.query(self.model).filter_by(**obj_in_data).one_or_none()
+        if instance:
+            return instance
+
+        instance = self.model(**obj_in_data)
+        db.add(instance)
+        db.commit()
+
+        return instance
+
     def get_multi(
         self, db: Session, *, skip: int = 0, limit: int = 100
     ) -> List[ModelType]:
@@ -25,7 +38,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
 
     def create(self, db: Session, *, obj_in: CreateSchemaType) -> ModelType:
         obj_in_data = jsonable_encoder(obj_in)
-        db_obj = self.model(**obj_in_data)  # type: ignore
+        db_obj = self.model(**obj_in_data)
         db.add(db_obj)
         db.commit()
         db.refresh(db_obj)

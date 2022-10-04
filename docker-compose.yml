@@ -4,7 +4,7 @@ services:
   notifications:
     build: Notifications/
     env_file:
-      - .env
+      - Notifications/.env
     volumes:
       - "./Notifications/app:/app"
     depends_on:
@@ -12,10 +12,8 @@ services:
         condition: "service_healthy"
   users:
     build: Users/
-    environment:
-      - ENV=prod
     env_file:
-      - .env
+      - Users/.env
     ports:
       - "8000:8000"
     volumes:
@@ -25,14 +23,12 @@ services:
         condition: "service_started"
       rabbitmq:
         condition: "service_healthy"
-      redis:
-        condition: "service_started"
   db:
     image: postgres:12.0-alpine
     volumes:
       - postgres_db:/var/lib/postgresql/data/
     env_file:
-       - .env
+       - Users/.env
     ports:
       - "5432:5432"
   rabbitmq:
@@ -46,12 +42,6 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
-  redis:
-    image: "redis:alpine"
-    ports:
-      - "6379:6379"
-    volumes:
-      - "redis_data:/data"
 
 
 volumes:

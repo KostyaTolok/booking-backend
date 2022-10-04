@@ -1,5 +1,7 @@
 aio-pika==8.2.2
 aiormq==6.4.2
+boto3==1.24.84
+botocore==1.27.84
 cachetools==5.2.0
 certifi==2022.9.14
 chardet==5.0.0
@@ -11,6 +13,7 @@ email-validator==1.3.0
 emails==0.6
 idna==3.4
 Jinja2==3.1.2
+jmespath==1.0.1
 lxml==4.9.1
 MarkupSafe==2.1.1
 multidict==6.0.2
@@ -20,6 +23,7 @@ pydantic==1.10.2
 python-dateutil==2.8.2
 python-dotenv==0.21.0
 requests==2.28.1
+s3transfer==0.6.0
 six==1.16.0
 typing-extensions==4.3.0
 urllib3==1.26.12

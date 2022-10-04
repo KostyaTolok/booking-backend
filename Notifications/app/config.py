@@ -34,17 +34,8 @@ class Config(BaseSettings):
 
     SECRET_KEY: str = secrets.token_urlsafe(32)
 
-    SMTP_TLS: bool = True
-    SMTP_PORT: Optional[int] = None
-    SMTP_HOST: Optional[str] = None
-    SMTP_USER: Optional[str] = None
-    SMTP_PASSWORD: Optional[str] = None
-    EMAILS_FROM_EMAIL: Optional[EmailStr] = None
+    EMAILS_FROM_EMAIL: EmailStr = os.getenv("EMAIL")
     EMAILS_FROM_NAME: Optional[str] = None
-
-    EMAIL_RESET_TOKEN_EXPIRE_HOURS: int = 48
-    EMAIL_TEMPLATES_DIR: str = "/app/app/email-templates/build"
-    EMAILS_ENABLED: bool = False
 
 
 class DevelopmentConfig(Config):

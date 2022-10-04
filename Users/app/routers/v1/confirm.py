@@ -9,29 +9,28 @@ from app.services.user import UserService
 router = APIRouter(tags=["confirm"])
 
 
-@router.post("/recover-password/{email}", response_model=schemas.Message)
-async def recover_password(
+@router.post("/reset-password", response_model=schemas.Message)
+async def reset_password(
         *,
         db: Session = Depends(dependencies.get_db),
-        email: str,
+        email: str = Body(..., embed=True),
 ):
     user = UserService.get_user_by_email(db, email=email)
-    await ConfirmService.send_recover_password_email(user)
+    await ConfirmService.send_recover_password_email(db, user=user)
     return {"msg": "Password recovery email sent"}
 
 
-@router.post("/reset-password", response_model=schemas.Message)
-def reset_password(
+@router.post("/reset-password/confirm", response_model=schemas.Message)
+def confirm_password_reset(
         *,
         db: Session = Depends(dependencies.get_db),
-        token: str = Body(...),
-        new_password: str = Body(...),
+        body: schemas.Reset,
 ):
-    ConfirmService.reset_password(db, token=token, new_password=new_password)
+    ConfirmService.reset_password(db, token=body.token, new_password=body.new_password)
     return {"msg": "Password updated successfully"}
 
 
-@router.post("/send-code", response_model=schemas.Message)
+@router.post("/verify-email", response_model=schemas.Message)
 async def send_email_confirmation_code(
         current_user: models.User = Depends(dependencies.get_current_user),
 ):
@@ -39,7 +38,7 @@ async def send_email_confirmation_code(
     return {"msg": "Code sent to email"}
 
 
-@router.post("/confirm-email", response_model=schemas.Message)
+@router.post("/verify-email/confirm", response_model=schemas.Message)
 async def confirm_email(
         *,
         db: Session = Depends(dependencies.get_db),

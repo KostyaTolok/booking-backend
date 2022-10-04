@@ -1,5 +1,6 @@
 import asyncio
 import json
+import logging
 
 from aio_pika import connect
 from aio_pika.abc import AbstractIncomingMessage
@@ -11,11 +12,13 @@ from send_email import send_email
 async def on_message(message: AbstractIncomingMessage) -> None:
     async with message.process():
         body = json.loads(message.body)
-        send_email(email_to=body["email_to"],
-                   subject_template=body["subject_template"],
-                   html_template=body["html_template"],
-                   environment=body["environment"],
-                   )
+        send_email(
+            sender=config.EMAILS_FROM_EMAIL,
+            recipients=("booking-mails@mail.ru",),
+            subject=body["subject"],
+            html=body.get("html", ""),
+            text=body.get("text", ""),
+        )
 
 
 async def main() -> None:
@@ -31,4 +34,5 @@ async def main() -> None:
 
 
 if __name__ == "__main__":
+    logging.getLogger().setLevel(logging.INFO)
     asyncio.run(main())

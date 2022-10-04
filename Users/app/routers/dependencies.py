@@ -8,11 +8,11 @@ from app import models
 from app.core.config import config
 from app.core.db import SessionLocal
 from app.core import exceptions
-from app.services.login import AuthService
+from app.core.utils.security.jwt import tokens
 from app.services.user import UserService
 
 reusable_oauth2 = OAuth2PasswordBearer(
-    tokenUrl=f"{config.API_PREFIX}/{config.API_CURRENT_VERSION}/auth/login"
+    tokenUrl=f"{config.API_PREFIX}/{config.API_CURRENT_VERSION}/auth/login/form"
 )
 
 
@@ -27,8 +27,8 @@ def get_db() -> Generator:
 def get_current_user(
     db: Session = Depends(get_db), token: str = Depends(reusable_oauth2)
 ) -> models.User:
-    token_data = AuthService.decode_token(token)
-    user = UserService.get_user(db, id=token_data["sub"])
+    payload = tokens.AccessToken(db, token=token)
+    user = UserService.get_user(db, id=payload["sub"])
     if not user:
         raise exceptions.NotFoundException(message="User not found")
     return user

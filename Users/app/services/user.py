@@ -15,8 +15,6 @@ class UserService:
 
         if not user:
             raise exceptions.BadRequestException(message="Incorrect email or password")
-        elif not user.is_active:
-            raise exceptions.BadRequestException(message="Inactive user")
 
         return user
 
