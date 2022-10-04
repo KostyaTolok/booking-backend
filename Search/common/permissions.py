@@ -25,7 +25,5 @@ class IsAdmin(BasePermission):
             return False
 
         payload = decode_token(jwt_token)
-
         role = payload.get("role", None)
-
         return role == Roles.ADMIN.value

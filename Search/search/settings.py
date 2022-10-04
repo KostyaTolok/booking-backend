@@ -35,7 +35,8 @@ INSTALLED_APPS = [
     'drf_yasg',
     'hotels',
     'rooms',
-    'images'
+    'images',
+    'cities'
 ]
 
 MIDDLEWARE = [
