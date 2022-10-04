@@ -5,10 +5,7 @@ from drf_yasg.views import get_schema_view
 from rest_framework.permissions import AllowAny
 
 schema_view = get_schema_view(
-    openapi.Info(
-        title="Booking Search API",
-        default_version='v1'
-    ),
+    openapi.Info(title="Booking Search API", default_version='v1'),
     public=True,
     permission_classes=(AllowAny,),
 )
@@ -22,5 +19,4 @@ urlpatterns = [
         path('images/', include('images.urls')),
         path('cities/', include('cities.urls'))
     ])),
-
 ]

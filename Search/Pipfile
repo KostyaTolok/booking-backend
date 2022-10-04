@@ -14,6 +14,7 @@ django-cors-headers = "*"
 aio-pika = "*"
 pillow = "*"
 drf-yasg = "*"
+pre-commit = "*"
 
 [dev-packages]
 

@@ -11,7 +11,7 @@ class ImagesViewSet(
     mixins.RetrieveModelMixin,
     mixins.UpdateModelMixin,
     mixins.DestroyModelMixin,
-    viewsets.GenericViewSet
+    viewsets.GenericViewSet,
 ):
     serializer_class = ImageSerializer
     permission_classes = (IsAdmin,)

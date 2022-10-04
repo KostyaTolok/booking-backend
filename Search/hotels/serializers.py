@@ -6,15 +6,15 @@ from hotels.models import Hotel
 
 
 class HotelSerializer(serializers.ModelSerializer):
-    images = serializers.ListField(child=serializers.ImageField(use_url=True),
-                                   required=False,
-                                   allow_empty=True,
-                                   write_only=True)
+    images = serializers.ListField(
+        child=serializers.ImageField(use_url=True), required=False, allow_empty=True, write_only=True
+    )
     rating = serializers.DecimalField(min_value=0, max_value=5, max_digits=2, decimal_places=1)
     city = serializers.CharField(source="city.name", read_only=True)
 
     class Meta:
         model = Hotel
+
         fields = (
             "id",
             "name",

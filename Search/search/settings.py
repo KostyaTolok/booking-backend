@@ -51,9 +51,7 @@ MIDDLEWARE = [
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_FILTER_BACKENDS': (
-        'django_filters.rest_framework.DjangoFilterBackend',
-    ),
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
 }
 
 SWAGGER_SETTINGS = {
@@ -72,8 +70,7 @@ ROOT_URLCONF = 'search.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -98,7 +95,7 @@ DATABASES = {
         'USER': os.getenv("DATABASE_USER"),
         'PASSWORD': os.getenv("DATABASE_PASSWORD"),
         'HOST': os.getenv("DATABASE_HOST"),
-        'PORT': os.getenv("DATABASE_PORT")
+        'PORT': os.getenv("DATABASE_PORT"),
     }
 }
 

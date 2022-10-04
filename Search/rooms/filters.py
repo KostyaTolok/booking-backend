@@ -12,9 +12,4 @@ class RoomFilter(django_filters.FilterSet):
     has_kitchen = filters.BooleanFilter()
     equipment_state = filters.ChoiceFilter(choices=EquipmentStates.choices)
     hotel = filters.NumberFilter()
-    order = filters.OrderingFilter(
-        fields=(
-            ('price', 'price')
-        )
-    )
-
+    order = filters.OrderingFilter(fields=(('price', 'price')))

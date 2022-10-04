@@ -13,6 +13,7 @@ class HotelFilter(django_filters.FilterSet):
     owner = filters.NumberFilter()
     city = filters.NumberFilter()
     beds_number = filters.NumberFilter(field_name="rooms__beds_number", lookup_expr="gte", distinct=True)
+
     order = filters.OrderingFilter(
         fields=(
             ('rating', 'rating'),
