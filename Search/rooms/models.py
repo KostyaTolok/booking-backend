@@ -13,7 +13,7 @@ class Room(models.Model):
         choices=EquipmentStates.choices,
         default=EquipmentStates.PENDING_VERIFICATION,
     )
-    images = models.ManyToManyField('images.Image', related_name="rooms", blank=True)
+
     has_washing_machine = models.BooleanField(verbose_name="Room has washing machine", default=False)
     has_kitchen = models.BooleanField(verbose_name="Room has kitchen", default=False)
 

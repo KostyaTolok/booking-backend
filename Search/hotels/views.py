@@ -24,7 +24,7 @@ class HotelsViewSet(
         'create': HotelSerializer,
         'update': HotelSerializer,
         'destroy': HotelSerializer,
-        'default': HotelSerializer
+        'default': HotelSerializer,
     }
     permission_classes = {
         'list': (IsAuthenticated,),
@@ -32,7 +32,7 @@ class HotelsViewSet(
         'create': (IsAdmin,),
         'update': (IsAdmin | IsHotelOwner,),
         'destroy': (IsAdmin | IsHotelOwner,),
-        'default': (IsAuthenticated,)
+        'default': (IsAuthenticated,),
     }
     queryset = Hotel.objects.all()
     filter_backends = (DjangoFilterBackend,)

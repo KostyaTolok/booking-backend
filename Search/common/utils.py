@@ -1,30 +1,16 @@
-import jwt
-from django.conf import settings
-from rest_framework.exceptions import AuthenticationFailed
+from hotels.models import Hotel
+from images.models import HotelImage, RoomImage
+from rooms.models import Room
 
 
-def decode_token(jwt_token):
-    try:
-        return jwt.decode(jwt_token, settings.JWT_SECRET_KEY, algorithms=['HS256'])
-    except jwt.ExpiredSignatureError:
-        raise AuthenticationFailed("Authentication token has expired")
-    except (jwt.DecodeError, jwt.InvalidTokenError):
-        raise AuthenticationFailed("Authorization has failed, token is invalid")
-    except Exception as e:
-        raise AuthenticationFailed("Authorization has failed")
+def create_images(image_files, instance):
+    assert isinstance(instance, Hotel) or isinstance(instance, Room), 'Incorrect instance type to create images'
+    if not image_files:
+        return
+    for image_file in image_files:
+        if isinstance(instance, Hotel):
+            image = HotelImage.objects.create(image_key=image_file, hotel=instance)
+        else:
+            image = RoomImage.objects.create(image_key=image_file, room=instance)
 
-
-def get_user_id(jwt_token):
-    if not jwt_token:
-        raise AuthenticationFailed("Authentication token not provided")
-
-    payload = decode_token(jwt_token)
-    user_id = payload.get("sub")
-
-    if not user_id:
-        raise AuthenticationFailed("User id not provided")
-
-    if not user_id.isdigit():
-        raise AuthenticationFailed("User id is incorrect")
-
-    return int(user_id)
+        image.save()

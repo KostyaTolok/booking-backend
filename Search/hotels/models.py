@@ -8,7 +8,6 @@ class Hotel(models.Model):
     rating = models.DecimalField(verbose_name="Hotel rating", max_digits=2, decimal_places=1)
     has_parking = models.BooleanField(verbose_name="Hotel has parking", default=False)
     has_wifi = models.BooleanField(verbose_name="Hotel has wi-fi", default=False)
-    images = models.ManyToManyField('images.Image', related_name="hotels", blank=True)
 
     owner = models.PositiveIntegerField(verbose_name="Hotel owner")
     city = models.ForeignKey('cities.City', verbose_name="Hotel city", on_delete=models.CASCADE, related_name="hotels")

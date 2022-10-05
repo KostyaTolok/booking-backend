@@ -24,7 +24,7 @@ class RoomsViewSet(
         'create': RoomSerializer,
         'update': RoomSerializer,
         'destroy': RoomSerializer,
-        'default': RoomSerializer
+        'default': RoomSerializer,
     }
     permission_classes = {
         'list': (IsAuthenticated,),
@@ -32,9 +32,8 @@ class RoomsViewSet(
         'create': (IsAdmin,),
         'update': (IsAdmin | IsRoomOwner,),
         'destroy': (IsAdmin | IsRoomOwner,),
-        'default': (IsAuthenticated,)
+        'default': (IsAuthenticated,),
     }
     queryset = Room.objects.all()
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RoomFilter
-
