@@ -35,6 +35,8 @@ class JWTBasePermission(BasePermission):
         if not user_id.isdigit():
             raise AuthenticationFailed("User id is incorrect")
 
+        return int(user_id)
+
 
 class IsAuthenticated(JWTBasePermission):
     def has_permission(self, request, view):

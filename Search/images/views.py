@@ -2,7 +2,12 @@ from rest_framework import mixins, viewsets
 
 from common.mixins import SerializerPermissionsMixin
 from images.models import HotelImage, RoomImage
-from images.permissions import IsImageHotelOwner, IsImageRoomOwner
+from images.permissions import (
+    IsImageHotelOwner,
+    IsImageRoomOwner,
+    IsAllowedToCreateRoomImage,
+    IsAllowedToCreateHotelImage,
+)
 from images.serializers import HotelImageSerializer, RoomImageSerializer
 from common.permissions import IsAdmin
 
@@ -16,9 +21,11 @@ class HotelImagesViewSet(
     SerializerPermissionsMixin,
     viewsets.GenericViewSet,
 ):
-    serializer_classes = {'default': HotelImageSerializer}
+    serializer_classes = {
+        'default': HotelImageSerializer,
+    }
     permission_classes = {
-        'create': (IsImageHotelOwner,),
+        'create': (IsAllowedToCreateHotelImage,),
         'update': (IsImageHotelOwner,),
         'delete': (IsImageHotelOwner,),
         'default': (IsAdmin,),
@@ -34,9 +41,11 @@ class RoomImagesViewSet(
     mixins.DestroyModelMixin,
     viewsets.GenericViewSet,
 ):
-    serializer_classes = {'default': RoomImageSerializer}
+    serializer_classes = {
+        'default': RoomImageSerializer,
+    }
     permission_classes = {
-        'create': (IsImageRoomOwner,),
+        'create': (IsAllowedToCreateRoomImage,),
         'update': (IsImageRoomOwner,),
         'delete': (IsImageRoomOwner,),
         'default': (IsAdmin,),

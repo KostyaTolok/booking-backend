@@ -15,6 +15,11 @@ class CitiesViewSet(
     SerializerPermissionsMixin,
     viewsets.GenericViewSet,
 ):
-    serializer_classes = {'default': CitySerializer}
-    permission_classes = {'list': (IsAuthenticated,), 'default': (IsAdmin,)}
+    serializer_classes = {
+        'default': CitySerializer,
+    }
+    permission_classes = {
+        'list': (IsAuthenticated,),
+        'default': (IsAdmin,),
+    }
     queryset = City.objects.all()
