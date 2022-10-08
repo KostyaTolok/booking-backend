@@ -9,12 +9,12 @@ class PasswordStr(str):
     @classmethod
     def validate(cls, value: str) -> str:
         if len(value) < 10:
-            raise ValueError('password must be at lest 10 letters')
+            raise ValueError("password must be at lest 10 letters")
 
-        rx = re.compile(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{10,}$')
+        rx = re.compile(r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{10,}$")
         if not rx.match(value):
             raise ValueError(
-                'password must include at lest digit number, a uppercase and a lowercase letter'
+                "password must include at least digit number, an uppercase and a lowercase letter"
             )
 
         return value

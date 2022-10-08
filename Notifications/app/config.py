@@ -40,7 +40,6 @@ class Config(BaseSettings):
 
 class DevelopmentConfig(Config):
     ENV: str = "development"
-    pass
 
 
 class ProductionConfig(Config):

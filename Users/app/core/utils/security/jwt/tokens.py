@@ -40,14 +40,12 @@ class Token:
                 "jti": uuid4().hex,
                 "type": self.token_type,
             }
-            self.set_exp(timedelta(minutes=self.lifetime))
+            self.set_expiration(timedelta(minutes=self.lifetime))
 
     @staticmethod
     def _decode_token(token: str):
         try:
-            payload = jwt.decode(
-                token, config.SECRET_KEY, algorithms=[ALGORITHM]
-            )
+            payload = jwt.decode(token, config.SECRET_KEY, algorithms=[ALGORITHM])
         except (jwt.exceptions.InvalidTokenError, jwt.exceptions.ExpiredSignatureError):
             raise InvalidToken("Token is invalid or expired")
 
@@ -65,7 +63,7 @@ class Token:
         self.payload["sub"] = subject
         return self
 
-    def set_exp(self, delta: timedelta):
+    def set_expiration(self, delta: timedelta):
         self.payload["exp"] = self.current_time + delta
 
     def get(self, key, default=None):
@@ -91,54 +89,53 @@ class Token:
 
 
 class BlacklistToken(Token):
-    if config.TOKEN_BLACKLIST:
-        def __init__(
-                self,
-                db: Session,
-                token: Union[str, models.Token] = None,
-                verify=True
-        ):
-            self.db = db
-            super().__init__(token, verify)
+    def __init__(
+        self, db: Session, token: Union[str, models.Token] = None, verify=True
+    ):
+        self.db = db
+        super().__init__(token, verify)
 
-        def verify(self):
-            self.check_blacklist()
-            super().verify()
+    def verify(self):
+        self.check_blacklist()
+        super().verify()
 
-        def check_blacklist(self):
-            jti = self.payload["jti"]
-            if crud.token.get_by_jti(self.db, jti=jti).blacklist:
-                raise InvalidToken("Token is blacklisted")
+    def check_blacklist(self):
+        jti = self.payload["jti"]
+        if crud.token.get_by_jti(self.db, jti=jti).blacklist:
+            raise InvalidToken("Token is blacklisted")
 
-        def _create_token_db(self) -> models.Token:
-            token_in = schemas.TokenCreate(
-                user_id=self.payload["sub"],
-                jti=self.payload["jti"],
-                token=str(self),
-                expires_at=self.payload["exp"]
-            )
-            self.token_db = crud.token.create(self.db, obj_in=token_in)
+    def _create_token_db(self) -> models.Token:
+        token_in = schemas.TokenCreate(
+            user_id=self.payload["sub"],
+            jti=self.payload["jti"],
+            token=str(self),
+            expires_at=self.payload["exp"],
+        )
+        self.token_db = crud.token.create(self.db, obj_in=token_in)
+        return self.token_db
+
+    def _get_token_db(self) -> models.Token:
+        if self.token_db:
             return self.token_db
 
-        def _get_token_db(self) -> models.Token:
-            if self.token_db:
-                return self.token_db
+        self.token_db = crud.token.get_by_jti(self.db, jti=self.payload["jti"])
+        if self.token_db:
+            return self.token_db
 
-            self.token_db = crud.token.get_by_jti(self.db, jti=self.payload["jti"])
-            if self.token_db:
-                return self.token_db
+        return self._create_token_db()
 
-            return self._create_token_db()
+    def blacklist(self):
+        token_db = self._get_token_db()
+        blacklisted_token_in = schemas.BlacklistedTokenCreate(token_id=token_db.id)
+        return crud.blacklisted_token.get_or_create(
+            self.db,
+            obj_in=blacklisted_token_in,
+        )
 
-        def blacklist(self):
-            token_db = self._get_token_db()
-            blacklisted_token_in = schemas.BlacklistedTokenCreate(token_id=token_db.id)
-            return crud.blacklisted_token.get_or_create(self.db, obj_in=blacklisted_token_in)
-
-        def for_user(self, subject):
-            super().for_user(subject)
-            self._create_token_db()
-            return self
+    def for_user(self, subject):
+        super().for_user(subject)
+        self._create_token_db()
+        return self
 
 
 class AccessToken(Token):
@@ -146,6 +143,6 @@ class AccessToken(Token):
     lifetime = config.ACCESS_TOKEN_EXPIRE_MINUTES
 
 
-class RefreshToken(BlacklistToken):
+class RefreshToken(BlacklistToken if config.TOKEN_BLACKLIST else Token):
     token_type = "refresh"
     lifetime = config.REFRESH_TOKEN_EXPIRE_MINUTES
