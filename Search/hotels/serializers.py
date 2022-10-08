@@ -2,8 +2,13 @@ from django.db.models import Min
 from rest_framework import serializers
 
 from common.utils import create_images
-from hotels.models import Hotel
-from images.serializers import HotelImageSerializer
+from hotels.models import Hotel, HotelImage
+
+
+class HotelImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HotelImage
+        fields = ("id", "image_key", "hotel")
 
 
 class HotelSerializer(serializers.ModelSerializer):
@@ -51,12 +56,18 @@ class HotelSerializer(serializers.ModelSerializer):
 
 class HotelListSerializer(serializers.ModelSerializer):
     min_price = serializers.SerializerMethodField(allow_null=True)
+    image = serializers.SerializerMethodField(allow_null=True)
 
     class Meta:
         model = Hotel
-        fields = ("id", "name", "images", "rating", "min_price")
+        fields = ("id", "name", "image", "rating", "min_price")
 
     def get_min_price(self, obj):
         query = obj.rooms.all().values_list('price', flat=True).aggregate(Min('price'))
 
         return query.get('price__min')
+
+    def get_image(self, obj):
+        image = obj.images.first()
+        if image:
+            return image.image_key.url

@@ -19,7 +19,6 @@ urlpatterns = [
             [
                 path('hotels/', include('hotels.urls')),
                 path('rooms/', include('rooms.urls')),
-                path('', include('images.urls')),
                 path('cities/', include('cities.urls')),
             ]
         ),

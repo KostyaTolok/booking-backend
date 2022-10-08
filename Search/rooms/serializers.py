@@ -1,9 +1,13 @@
 from rest_framework import serializers
 
 from common.utils import create_images
-from images.models import RoomImage
-from images.serializers import RoomImageSerializer
-from rooms.models import Room
+from rooms.models import Room, RoomImage
+
+
+class RoomImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RoomImage
+        fields = ("id", "image_key", "room")
 
 
 class RoomSerializer(serializers.ModelSerializer):

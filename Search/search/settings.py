@@ -36,7 +36,6 @@ INSTALLED_APPS = [
     'aws',
     'hotels',
     'rooms',
-    'images',
     'cities',
 ]
 

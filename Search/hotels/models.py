@@ -1,4 +1,8 @@
+from functools import partial
+
 from django.db import models
+
+from common.utils import path_and_rename
 
 
 class Hotel(models.Model):
@@ -11,3 +15,10 @@ class Hotel(models.Model):
 
     owner = models.PositiveIntegerField(verbose_name="Hotel owner")
     city = models.ForeignKey('cities.City', verbose_name="Hotel city", on_delete=models.CASCADE, related_name="hotels")
+
+
+class HotelImage(models.Model):
+    image_key = models.ImageField(
+        verbose_name="Image key", blank=False, upload_to=partial(path_and_rename, path="hotels")
+    )
+    hotel = models.ForeignKey('hotels.Hotel', verbose_name="Hotel", on_delete=models.CASCADE, related_name="images")
