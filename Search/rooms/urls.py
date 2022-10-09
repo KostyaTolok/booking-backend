@@ -1,6 +1,7 @@
-from rest_framework import routers
+from django.urls import path, include
+from rest_framework_nested import routers
 
-from rooms.views import RoomsViewSet
+from rooms.views import RoomsViewSet, RoomImagesViewSet
 
 app_name = 'rooms'
 
@@ -8,4 +9,10 @@ router = routers.SimpleRouter()
 
 router.register(r'', RoomsViewSet, 'rooms')
 
-urlpatterns = router.urls
+images_router = routers.NestedSimpleRouter(router, '', lookup='room')
+images_router.register('images', RoomImagesViewSet, basename='images')
+
+urlpatterns = [
+    path('', include(router.urls)),
+    path('', include(images_router.urls)),
+]

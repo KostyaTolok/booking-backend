@@ -1,15 +1,15 @@
+from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, mixins, status
-from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from common.mixins import SerializerPermissionsMixin
 from common.permissions import IsAdmin, IsAuthenticated
 from hotels.filters import HotelFilter
-from hotels.models import Hotel
+from hotels.models import Hotel, HotelImage
 from hotels.permissions import IsHotelOwner
-from hotels.serializers import HotelSerializer, HotelListSerializer
-from hotels.services import add_hotel_image, delete_hotel_image
+from hotels.serializers import HotelSerializer, HotelListSerializer, HotelImageSerializer
+from hotels.services import add_hotel_image
 
 
 class HotelsViewSet(
@@ -43,14 +43,27 @@ class HotelsViewSet(
     filter_backends = (DjangoFilterBackend,)
     filterset_class = HotelFilter
 
-    @action(detail=True, methods=["post"], url_path="images")
-    def add_hotel_image(self, request, pk=None):
-        hotel_image = request.FILES.get("image")
-        hotel = self.get_object()
-        add_hotel_image(hotel, hotel_image)
-        return Response("Image added to hotel images", status.HTTP_200_OK)
 
-    @action(detail=True, methods=["delete"], url_path="images/(?P<image_id>\d+)")
-    def delete_hotel_image(self, request, pk=None, image_id=None):
-        delete_hotel_image(image_id)
-        return Response(None, status.HTTP_204_NO_CONTENT)
+class HotelImagesViewSet(
+    mixins.CreateModelMixin, mixins.DestroyModelMixin, SerializerPermissionsMixin, viewsets.GenericViewSet
+):
+    serializer_classes = {
+        "default": HotelImageSerializer,
+    }
+    permission_classes = {
+        "create": (IsAdmin | IsHotelOwner,),
+        "destroy": (IsAdmin | IsHotelOwner,),
+        "default": (IsAdmin,),
+    }
+
+    def get_queryset(self):
+        hotel_id = self.kwargs.get("hotel_pk")
+        hotel = get_object_or_404(Hotel, id=hotel_id)
+        return HotelImage.objects.filter(hotel=hotel)
+
+    def create(self, request, *args, **kwargs):
+        hotel_image = request.FILES.get("image_file")
+        hotel_id = kwargs.get("hotel_pk")
+        image = add_hotel_image(hotel_id, hotel_image)
+        serializer = HotelImageSerializer(image)
+        return Response(serializer.data, status.HTTP_201_CREATED)

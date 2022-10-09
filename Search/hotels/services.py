@@ -1,18 +1,12 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.exceptions import ValidationError
 
-from hotels.models import HotelImage
+from hotels.models import HotelImage, Hotel
 
 
-def add_hotel_image(hotel, image_file):
+def add_hotel_image(hotel_id, image_file):
+    hotel = get_object_or_404(Hotel, id=hotel_id)
     if not image_file:
         raise ValidationError("Image file is not provided")
-    HotelImage.objects.create(image_key=image_file, hotel=hotel)
-    hotel.save()
-
-
-def delete_hotel_image(image_id):
-    if not image_id:
-        raise ValidationError("Image id is not provided")
-    image = get_object_or_404(HotelImage, id=image_id)
-    image.delete()
+    image = HotelImage.objects.create(image_key=image_file, hotel=hotel)
+    return image

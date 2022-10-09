@@ -1,6 +1,5 @@
 from rest_framework import serializers
 
-from common.utils import create_images
 from rooms.models import Room, RoomImage
 
 
@@ -8,6 +7,7 @@ class RoomImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = RoomImage
         fields = ("id", "image_key", "room")
+        read_only_fields = ("id", "image_key", "room")
 
 
 class RoomSerializer(serializers.ModelSerializer):
@@ -38,20 +38,19 @@ class RoomSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         image_files = validated_data.pop("image_files", None)
         room = Room.objects.create(**validated_data)
-        create_images(image_files, room)
-        room.save()
+        if image_files:
+            for image_file in image_files:
+                RoomImage.objects.create(image_key=image_file, room=room)
         return room
-
-    def update(self, instance, validated_data):
-        image_files = validated_data.pop("image_files", None)
-        for image in instance.images.all():
-            image.delete()
-        create_images(image_files, instance)
-        instance.save()
-        return super().update(instance, validated_data)
 
 
 class RoomListSerializer(serializers.ModelSerializer):
+    first_image = serializers.SerializerMethodField(allow_null=True)
+
     class Meta:
         model = Room
-        fields = ("id", "name", "images", "price", "hotel")
+        fields = ("id", "name", "first_image", "price", "hotel")
+
+    def get_first_image(self, obj):
+        image = obj.images.first()
+        return image.image_key.url if image else None

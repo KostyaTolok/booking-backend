@@ -17,6 +17,7 @@ drf-yasg = "*"
 pre-commit = "*"
 boto3 = "*"
 botocore = "*"
+drf-nested-routers = "*"
 
 [dev-packages]
 
