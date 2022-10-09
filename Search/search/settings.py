@@ -33,10 +33,10 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_filters',
     'drf_yasg',
+    'aws',
     'hotels',
     'rooms',
-    'images',
-    'cities'
+    'cities',
 ]
 
 MIDDLEWARE = [
@@ -137,3 +137,11 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+AWS_REGION = os.getenv("AWS_REGION")
+AWS_S3_BUCKET_NAME = os.getenv("AWS_S3_BUCKET_NAME")
+AWS_S3_URL_EXPIRATION_TIME = os.getenv('AWS_S3_URL_EXPIRATION_TIME')
+
+DEFAULT_FILE_STORAGE = 'aws.storage.S3Storage'

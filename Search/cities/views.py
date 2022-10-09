@@ -13,13 +13,13 @@ class CitiesViewSet(
     mixins.UpdateModelMixin,
     mixins.DestroyModelMixin,
     SerializerPermissionsMixin,
-    viewsets.GenericViewSet
+    viewsets.GenericViewSet,
 ):
     serializer_classes = {
-        'default': CitySerializer
+        'default': CitySerializer,
     }
     permission_classes = {
         'list': (IsAuthenticated,),
-        'default': (IsAdmin,)
+        'default': (IsAdmin,),
     }
     queryset = City.objects.all()

@@ -1,6 +1,9 @@
+from functools import partial
+
 from django.db import models
 
 from common.choices import EquipmentStates
+from common.utils import path_and_rename
 
 
 class Room(models.Model):
@@ -13,10 +16,17 @@ class Room(models.Model):
         choices=EquipmentStates.choices,
         default=EquipmentStates.PENDING_VERIFICATION,
     )
-    images = models.ManyToManyField('images.Image', related_name="rooms", blank=True)
+
     has_washing_machine = models.BooleanField(verbose_name="Room has washing machine", default=False)
     has_kitchen = models.BooleanField(verbose_name="Room has kitchen", default=False)
 
     hotel = models.ForeignKey(
         'hotels.Hotel', verbose_name="Hotel rooms", on_delete=models.CASCADE, related_name="rooms"
     )
+
+
+class RoomImage(models.Model):
+    image_key = models.ImageField(
+        verbose_name="Image key", blank=False, upload_to=partial(path_and_rename, path="rooms")
+    )
+    room = models.ForeignKey('rooms.Room', verbose_name="Room image", on_delete=models.CASCADE, related_name="images")

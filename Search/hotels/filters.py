@@ -17,7 +17,7 @@ class HotelFilter(django_filters.FilterSet):
     order = filters.OrderingFilter(
         fields=(
             ('rating', 'rating'),
-            ('rooms__price', "price")
+            ('rooms__price', "price"),
         ),
-        distinct=True
+        distinct=True,
     )
