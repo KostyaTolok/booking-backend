@@ -39,11 +39,9 @@ class HotelSerializer(serializers.ModelSerializer):
         extra_kwargs = {"city": {'write_only': True}}
 
     def create(self, validated_data):
-        image_files = validated_data.pop("image_files", None)
+        image_files = validated_data.pop("image_files", [])
         hotel = Hotel.objects.create(**validated_data)
-        if image_files:
-            for image_file in image_files:
-                HotelImage.objects.create(image_key=image_file, hotel=hotel)
+        HotelImage.objects.bulk_create((HotelImage(image_key=image_file, hotel=hotel) for image_file in image_files))
         return hotel
 
 

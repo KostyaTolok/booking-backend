@@ -36,11 +36,9 @@ class RoomSerializer(serializers.ModelSerializer):
         )
 
     def create(self, validated_data):
-        image_files = validated_data.pop("image_files", None)
+        image_files = validated_data.pop("image_files", [])
         room = Room.objects.create(**validated_data)
-        if image_files:
-            for image_file in image_files:
-                RoomImage.objects.create(image_key=image_file, room=room)
+        RoomImage.objects.bulk_create((RoomImage(image_key=image_file, room=room) for image_file in image_files))
         return room
 
 

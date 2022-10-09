@@ -35,8 +35,6 @@ class RoomsViewSet(
         'create': (IsAdmin,),
         'update': (IsAdmin | IsRoomOwner,),
         'destroy': (IsAdmin | IsRoomOwner,),
-        'add_room_image': (IsAdmin | IsRoomOwner,),
-        'delete_room_image': (IsAdmin | IsRoomOwner,),
         'default': (IsAuthenticated,),
     }
     queryset = Room.objects.all()

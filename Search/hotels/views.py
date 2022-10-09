@@ -35,8 +35,6 @@ class HotelsViewSet(
         'create': (IsAdmin,),
         'update': (IsAdmin | IsHotelOwner,),
         'destroy': (IsAdmin | IsHotelOwner,),
-        'add_hotel_image': (IsAdmin | IsHotelOwner,),
-        'delete_hotel_image': (IsAdmin | IsHotelOwner,),
         'default': (IsAuthenticated,),
     }
     queryset = Hotel.objects.all()
