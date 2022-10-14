@@ -20,6 +20,9 @@ class CitiesViewSet(
     }
     permission_classes = {
         'list': (IsAuthenticated,),
-        'default': (IsAdmin,),
+        'default': (
+            IsAuthenticated,
+            IsAdmin,
+        ),
     }
     queryset = City.objects.all()

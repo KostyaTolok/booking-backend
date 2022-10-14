@@ -32,9 +32,18 @@ class RoomsViewSet(
     permission_classes = {
         'list': (IsAuthenticated,),
         'retrieve': (IsAuthenticated,),
-        'create': (IsAdmin,),
-        'update': (IsAdmin | IsRoomOwner,),
-        'destroy': (IsAdmin | IsRoomOwner,),
+        'create': (
+            IsAuthenticated,
+            IsAdmin,
+        ),
+        'update': (
+            IsAuthenticated,
+            IsAdmin | IsRoomOwner,
+        ),
+        'destroy': (
+            IsAuthenticated,
+            IsAdmin | IsRoomOwner,
+        ),
         'default': (IsAuthenticated,),
     }
     queryset = Room.objects.all()
@@ -43,15 +52,27 @@ class RoomsViewSet(
 
 
 class RoomImagesViewSet(
-    mixins.CreateModelMixin, mixins.DestroyModelMixin, SerializerPermissionsMixin, viewsets.GenericViewSet
+    mixins.CreateModelMixin,
+    mixins.DestroyModelMixin,
+    SerializerPermissionsMixin,
+    viewsets.GenericViewSet,
 ):
     serializer_classes = {
         "default": RoomImageSerializer,
     }
     permission_classes = {
-        "create": (IsAdmin | IsRoomOwner,),
-        "destroy": (IsAdmin | IsRoomOwner,),
-        'default': (IsAdmin,),
+        "create": (
+            IsAuthenticated,
+            IsAdmin | IsRoomOwner,
+        ),
+        "destroy": (
+            IsAuthenticated,
+            IsAdmin | IsRoomOwner,
+        ),
+        'default': (
+            IsAuthenticated,
+            IsAdmin,
+        ),
     }
 
     def get_queryset(self):

@@ -52,6 +52,7 @@ MIDDLEWARE = [
 
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
+    'DEFAULT_AUTHENTICATION_CLASSES': ('common.backends.JWTAuthentication',),
 }
 
 SWAGGER_SETTINGS = {
@@ -145,3 +146,5 @@ AWS_S3_BUCKET_NAME = os.getenv("AWS_S3_BUCKET_NAME")
 AWS_S3_URL_EXPIRATION_TIME = os.getenv('AWS_S3_URL_EXPIRATION_TIME')
 
 DEFAULT_FILE_STORAGE = 'aws.storage.S3Storage'
+
+HOTEL_VIEWS_MAX_AMOUNT = int(os.getenv("HOTEL_VIEWS_MAX_AMOUNT", 50))

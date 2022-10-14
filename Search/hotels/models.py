@@ -22,3 +22,9 @@ class HotelImage(models.Model):
         verbose_name="Image key", blank=False, upload_to=partial(path_and_rename, path="hotels")
     )
     hotel = models.ForeignKey('hotels.Hotel', verbose_name="Hotel", on_delete=models.CASCADE, related_name="images")
+
+
+class HotelView(models.Model):
+    hotel = models.OneToOneField('hotels.Hotel', on_delete=models.CASCADE, related_name="view")
+    viewer = models.PositiveIntegerField()
+    date = models.DateTimeField(auto_now_add=True)
