@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import mixins, viewsets, status
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from common.mixins import SerializerPermissionsMixin
@@ -30,20 +31,11 @@ class RoomsViewSet(
         'default': RoomSerializer,
     }
     permission_classes = {
-        'list': (IsAuthenticated,),
-        'retrieve': (IsAuthenticated,),
-        'create': (
-            IsAuthenticated,
-            IsAdmin,
-        ),
-        'update': (
-            IsAuthenticated,
-            IsAdmin | IsRoomOwner,
-        ),
-        'destroy': (
-            IsAuthenticated,
-            IsAdmin | IsRoomOwner,
-        ),
+        'list': (AllowAny,),
+        'retrieve': (AllowAny,),
+        'create': (IsAdmin,),
+        'update': (IsAdmin | IsRoomOwner,),
+        'destroy': (IsAdmin | IsRoomOwner,),
         'default': (IsAuthenticated,),
     }
     queryset = Room.objects.all()
@@ -61,18 +53,9 @@ class RoomImagesViewSet(
         "default": RoomImageSerializer,
     }
     permission_classes = {
-        "create": (
-            IsAuthenticated,
-            IsAdmin | IsRoomOwner,
-        ),
-        "destroy": (
-            IsAuthenticated,
-            IsAdmin | IsRoomOwner,
-        ),
-        'default': (
-            IsAuthenticated,
-            IsAdmin,
-        ),
+        "create": (IsAdmin | IsRoomOwner,),
+        "destroy": (IsAdmin | IsRoomOwner,),
+        'default': (IsAdmin,),
     }
 
     def get_queryset(self):

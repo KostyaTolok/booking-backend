@@ -25,6 +25,6 @@ class HotelImage(models.Model):
 
 
 class HotelView(models.Model):
-    hotel = models.OneToOneField('hotels.Hotel', on_delete=models.CASCADE, related_name="view")
-    viewer = models.PositiveIntegerField()
+    hotel = models.ForeignKey('hotels.Hotel', on_delete=models.CASCADE, related_name="views")
+    viewer = models.PositiveIntegerField(unique=True)
     date = models.DateTimeField(auto_now_add=True)

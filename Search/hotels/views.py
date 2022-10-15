@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from common.mixins import SerializerPermissionsMixin
@@ -31,20 +32,11 @@ class HotelsViewSet(
         'default': HotelSerializer,
     }
     permission_classes = {
-        'list': (IsAuthenticated,),
-        'retrieve': (IsAuthenticated,),
-        'create': (
-            IsAuthenticated,
-            IsAdmin,
-        ),
-        'update': (
-            IsAuthenticated,
-            IsAdmin | IsHotelOwner,
-        ),
-        'destroy': (
-            IsAuthenticated,
-            IsAdmin | IsHotelOwner,
-        ),
+        'list': (AllowAny,),
+        'retrieve': (AllowAny,),
+        'create': (IsAdmin,),
+        'update': (IsAdmin | IsHotelOwner,),
+        'destroy': (IsAdmin | IsHotelOwner,),
         'default': (IsAuthenticated,),
     }
     queryset = Hotel.objects.all()
@@ -53,9 +45,8 @@ class HotelsViewSet(
 
     def retrieve(self, request, *args, **kwargs):
         hotel = self.get_object()
-        if not hasattr(hotel, "view"):
-            user_id = request.user.get("user_id")
-            HotelView.objects.create(hotel=hotel, viewer=user_id)
+        user_id = request.user.get("user_id")
+        HotelView.objects.get_or_create(hotel=hotel, viewer=user_id)
         return super().retrieve(self, request, *args, **kwargs)
 
     @action(detail=False, methods=["get"], url_path="recently-viewed")
@@ -76,18 +67,9 @@ class HotelImagesViewSet(
         "default": HotelImageSerializer,
     }
     permission_classes = {
-        "create": (
-            IsAuthenticated,
-            IsAdmin | IsHotelOwner,
-        ),
-        "destroy": (
-            IsAuthenticated,
-            IsAdmin | IsHotelOwner,
-        ),
-        "default": (
-            IsAuthenticated,
-            IsAdmin,
-        ),
+        "create": (IsAdmin | IsHotelOwner,),
+        "destroy": (IsAdmin | IsHotelOwner,),
+        "default": (IsAdmin,),
     }
 
     def get_queryset(self):

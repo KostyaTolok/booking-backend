@@ -1,5 +1,5 @@
 from django.apps import AppConfig
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_delete
 
 
 class HotelsConfig(AppConfig):
@@ -8,7 +8,6 @@ class HotelsConfig(AppConfig):
 
     def ready(self):
         from hotels import signals
-        from hotels.models import HotelImage, HotelView
+        from hotels.models import HotelImage
 
-        post_save.connect(signals.post_save_hotel_view, sender=HotelView)
         post_delete.connect(signals.post_delete_image, sender=HotelImage)
