@@ -1,7 +1,6 @@
-from common.permissions import JWTBasePermission
+from rest_framework.permissions import BasePermission
 
 
-class IsHotelOwner(JWTBasePermission):
+class IsHotelOwner(BasePermission):
     def has_object_permission(self, request, view, obj):
-        user_id = self.get_user_id(request)
-        return user_id == obj.owner
+        return request.user is not None and request.user.get("user_id") == obj.owner

@@ -1,4 +1,5 @@
 from rest_framework import mixins, viewsets
+from rest_framework.permissions import AllowAny
 
 from cities.models import City
 from cities.serializer import CitySerializer
@@ -19,7 +20,7 @@ class CitiesViewSet(
         'default': CitySerializer,
     }
     permission_classes = {
-        'list': (IsAuthenticated,),
+        'list': (AllowAny,),
         'default': (IsAdmin,),
     }
     queryset = City.objects.all()
