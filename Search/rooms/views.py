@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import mixins, viewsets, status
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from common.mixins import SerializerPermissionsMixin
@@ -30,8 +31,8 @@ class RoomsViewSet(
         'default': RoomSerializer,
     }
     permission_classes = {
-        'list': (IsAuthenticated,),
-        'retrieve': (IsAuthenticated,),
+        'list': (AllowAny,),
+        'retrieve': (AllowAny,),
         'create': (IsAdmin,),
         'update': (IsAdmin | IsRoomOwner,),
         'destroy': (IsAdmin | IsRoomOwner,),
@@ -43,7 +44,10 @@ class RoomsViewSet(
 
 
 class RoomImagesViewSet(
-    mixins.CreateModelMixin, mixins.DestroyModelMixin, SerializerPermissionsMixin, viewsets.GenericViewSet
+    mixins.CreateModelMixin,
+    mixins.DestroyModelMixin,
+    SerializerPermissionsMixin,
+    viewsets.GenericViewSet,
 ):
     serializer_classes = {
         "default": RoomImageSerializer,

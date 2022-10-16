@@ -1,7 +1,7 @@
 from django.db.models import Min
 from rest_framework import serializers
 
-from hotels.models import Hotel, HotelImage
+from hotels.models import Hotel, HotelImage, HotelView
 
 
 class HotelImageSerializer(serializers.ModelSerializer):
@@ -37,10 +37,13 @@ class HotelSerializer(serializers.ModelSerializer):
             "owner",
         )
         extra_kwargs = {"city": {'write_only': True}}
+        read_only_fields = ("owner",)
 
     def create(self, validated_data):
         image_files = validated_data.pop("image_files", [])
-        hotel = Hotel.objects.create(**validated_data)
+        request = self.context.get("request")
+        user_id = request.user.get("user_id")
+        hotel = Hotel.objects.create(**validated_data, owner=user_id)
         HotelImage.objects.bulk_create((HotelImage(image_key=image_file, hotel=hotel) for image_file in image_files))
         return hotel
 
@@ -48,16 +51,24 @@ class HotelSerializer(serializers.ModelSerializer):
 class HotelListSerializer(serializers.ModelSerializer):
     min_price = serializers.SerializerMethodField(allow_null=True)
     first_image = serializers.SerializerMethodField(allow_null=True)
+    city_name = serializers.CharField(source="city.name")
 
     class Meta:
         model = Hotel
-        fields = ("id", "name", "first_image", "rating", "min_price")
+        fields = ("id", "name", "first_image", "rating", "min_price", "city_name")
 
     def get_min_price(self, obj):
         query = obj.rooms.all().values_list('price', flat=True).aggregate(Min('price'))
-
         return query.get('price__min')
 
     def get_first_image(self, obj):
         image = obj.images.first()
         return image.image_key.url if image else None
+
+
+class HotelViewSerializer(serializers.ModelSerializer):
+    hotel = HotelListSerializer()
+
+    class Meta:
+        model = HotelView
+        fields = ("id", "hotel")
