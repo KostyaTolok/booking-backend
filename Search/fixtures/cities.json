@@ -1,0 +1,16 @@
+[
+  {
+    "model": "cities.City",
+    "pk": 1,
+    "fields": {
+      "name": "Minsk"
+    }
+  },
+  {
+    "model": "cities.City",
+    "pk": 2,
+    "fields": {
+      "name": "Brest"
+    }
+  }
+]
