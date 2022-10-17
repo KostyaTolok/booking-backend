@@ -16,7 +16,7 @@ class HotelSerializer(serializers.ModelSerializer):
         child=serializers.ImageField(use_url=True), required=False, allow_empty=True, write_only=True
     )
     images = HotelImageSerializer(many=True, read_only=True)
-    rating = serializers.DecimalField(min_value=0, max_value=5, max_digits=2, decimal_places=1)
+    rating = serializers.DecimalField(min_value=0, max_value=10, max_digits=3, decimal_places=1)
     city_name = serializers.CharField(source="city.name", read_only=True)
 
     class Meta:
