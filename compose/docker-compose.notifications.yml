@@ -1,0 +1,24 @@
+version: "3.9"
+
+services:
+  notifications:
+    build: ../Notifications/
+    container_name: notifications
+    env_file:
+      - ../Notifications/.env
+    volumes:
+      - "../Notifications/app:/app"
+    networks:
+      - notifications
+      - web
+    depends_on:
+      rabbitmq:
+        condition: "service_healthy"
+
+
+networks:
+  web:
+    external: true
+    name: shared-web
+  notifications:
+    driver: bridge

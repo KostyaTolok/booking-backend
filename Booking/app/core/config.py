@@ -1,7 +1,7 @@
 import os
-from typing import List, Optional, Dict, Any
+from typing import Optional, Dict, Any
 
-from pydantic import BaseSettings, AnyHttpUrl, validator
+from pydantic import BaseSettings, validator
 from dotenv import load_dotenv
 from pydantic.networks import PostgresDsn, AmqpDsn
 
@@ -15,16 +15,16 @@ class Config(BaseSettings):
     API_PREFIX: str = "/api"
     API_CURRENT_VERSION: str = "v1"
     APP_HOST: str = "0.0.0.0"
-    APP_PORT: int = 8001
+    APP_PORT: int = 8080
 
     SECRET_KEY: str = os.getenv("SECRET_KEY")
-    TOKEN_BLACKLIST: bool = True
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
-    REFRESH_TOKEN_EXPIRE_MINUTES: int = 60 * 24
 
-    BACKEND_CORS_ORIGINS: List[AnyHttpUrl] = []
+    PAYMENT_INTENT_EXPIRE_MINUTES: int = 15
+    REMOVE_EXPIRED_PAYMENT_INTENTS_SECONDS = 60
 
-    USERS_OPEN_REGISTRATION: bool = False
+    STRIPE_SECRET_KEY: str = os.getenv("STRIPE_SECRET_KEY")
+    STRIPE_PUBLISHABLE_KEY: str = os.getenv("STRIPE_PUBLISHABLE_KEY")
+    STRIPE_WEBHOOK_SECRET: str = os.getenv("STRIPE_WEBHOOK_SECRET")
 
     DB_USER: str = os.getenv("POSTGRES_USER")
     DB_PASS: str = os.getenv("POSTGRES_PASSWORD")
@@ -65,9 +65,6 @@ class Config(BaseSettings):
             host=values.get("RABBITMQ_HOST"),
             port=values.get("RABBITMQ_PORT"),
         )
-
-    EMAIL_RESET_TOKEN_EXPIRE_HOURS: int = 8
-    EMAIL_CONFIRMATION_CODE_EXPIRE_SECONDS: int = 120
 
 
 class DevelopmentConfig(Config):
