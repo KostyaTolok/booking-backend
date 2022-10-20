@@ -1,17 +1,17 @@
 version: "3.9"
 
 services:
-  booking:
-    build: ../Booking/
+  payments:
+    build: ../Payments/
     env_file:
-      - ../Booking/.env
+      - ../Payments/.env
     networks:
       - booking
       - web
     ports:
       - "8002:8000"
     volumes:
-      - "../Booking:/app"
+      - "../Payments:/app"
     depends_on:
       booking_db:
         condition: "service_started"
@@ -23,11 +23,11 @@ services:
     volumes:
       - booking_db_data:/var/lib/postgresql/data/
     env_file:
-      - ../Booking/.env
+      - ../Payments/.env
     networks:
       - booking
-    ports:
-      - "5432:5432"
+    expose:
+      - "5432"
 
 
 volumes:

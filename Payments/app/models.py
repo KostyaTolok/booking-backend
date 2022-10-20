@@ -5,7 +5,7 @@ from sqlalchemy import Column, Integer, String, Boolean, Date, DateTime, DECIMAL
 from app.core.db import Base
 
 
-class Booking(Base):
+class BookingPayment(Base):
     id = Column(Integer, primary_key=True, index=True)
 
     created_at = Column(DateTime(), default=datetime.utcnow)

@@ -2,54 +2,51 @@ import os
 from typing import Optional, Dict, Any
 
 from pydantic import BaseSettings, validator
-from dotenv import load_dotenv
 from pydantic.networks import PostgresDsn, AmqpDsn
-
-load_dotenv()
 
 
 class Config(BaseSettings):
-    ENV: str = None
-    DEBUG: bool = None
-    ROOT_PATH: str = os.getenv("ROOT_PATH", "")
+    ENV: str
+    DEBUG: bool
+    ROOT_PATH: str = ""
     API_PREFIX: str = "/api"
     API_CURRENT_VERSION: str = "v1"
     APP_HOST: str = "0.0.0.0"
     APP_PORT: int = 8080
 
-    SECRET_KEY: str = os.getenv("SECRET_KEY")
+    SECRET_KEY: str
 
     PAYMENT_INTENT_EXPIRE_MINUTES: int = 15
     REMOVE_EXPIRED_PAYMENT_INTENTS_SECONDS = 60
 
-    STRIPE_SECRET_KEY: str = os.getenv("STRIPE_SECRET_KEY")
-    STRIPE_PUBLISHABLE_KEY: str = os.getenv("STRIPE_PUBLISHABLE_KEY")
-    STRIPE_WEBHOOK_SECRET: str = os.getenv("STRIPE_WEBHOOK_SECRET")
+    STRIPE_SECRET_KEY: str
+    STRIPE_PUBLISHABLE_KEY: str
+    STRIPE_WEBHOOK_SECRET: str
 
-    DB_USER: str = os.getenv("POSTGRES_USER")
-    DB_PASS: str = os.getenv("POSTGRES_PASSWORD")
-    DB_NAME: str = os.getenv("POSTGRES_DB")
-    DB_HOST: str = os.getenv("POSTGRES_HOST")
-    DB_PORT: str = os.getenv("POSTGRES_PORT")
-    DB_URL: Optional[PostgresDsn] = None
+    POSTGRES_USER: str
+    POSTGRES_PASSWORD: str
+    POSTGRES_DB: str
+    POSTGRES_HOST: str
+    POSTGRES_PORT: str
+    DB_URL: PostgresDsn = None
 
-    @validator("DB_URL", pre=True)
+    @validator("DB_URL")
     def assemble_db_connection(cls, v: Optional[str], values: Dict[str, Any]) -> Any:
         if isinstance(v, str):
             return v
         return PostgresDsn.build(
             scheme="postgresql+psycopg2",
-            user=values.get("DB_USER"),
-            password=values.get("DB_PASS"),
-            host=values.get("DB_HOST"),
-            port=os.getenv("POSTGRES_PORT"),
-            path=f"/{values.get('DB_NAME') or ''}",
+            user=values.get("POSTGRES_USER"),
+            password=values.get("POSTGRES_PASSWORD"),
+            host=values.get("POSTGRES_HOST"),
+            port=values.get("POSTGRES_PORT"),
+            path=f"/{values.get('POSTGRES_DB') or ''}",
         )
 
-    RABBITMQ_HOST: str = os.getenv("RABBITMQ_HOST")
-    RABBITMQ_PORT: str = os.getenv("RABBITMQ_PORT")
-    RABBITMQ_USER: str = os.getenv("RABBITMQ_USER")
-    RABBITMQ_PASSWORD: str = os.getenv("RABBITMQ_PASSWORD")
+    RABBITMQ_HOST: str
+    RABBITMQ_PORT: str
+    RABBITMQ_USER: str
+    RABBITMQ_PASSWORD: str
     RABBITMQ_URL: Optional[AmqpDsn] = None
 
     @validator("RABBITMQ_URL", pre=True)
@@ -65,6 +62,9 @@ class Config(BaseSettings):
             host=values.get("RABBITMQ_HOST"),
             port=values.get("RABBITMQ_PORT"),
         )
+
+    class Config:
+        env_file = ".env"
 
 
 class DevelopmentConfig(Config):

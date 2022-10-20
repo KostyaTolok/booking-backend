@@ -15,7 +15,8 @@ class SingletonAiohttp:
             timeout = aiohttp.ClientTimeout(total=2)
             connector = aiohttp.TCPConnector(limit_per_host=SIZE_POOL_AIOHTTP)
             cls.aiohttp_client = aiohttp.ClientSession(
-                timeout=timeout, connector=connector
+                timeout=timeout,
+                connector=connector,
             )
 
         return cls.aiohttp_client

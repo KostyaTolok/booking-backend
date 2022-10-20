@@ -36,11 +36,11 @@ class StripeService:
         )
 
     @staticmethod
-    async def construct_event(
+    def construct_event(
         payload: bytes,
         signature: str,
     ):
-        return await stripe.Webhook.construct_event(
+        return stripe.Webhook.construct_event(
             payload=payload,
             sig_header=signature,
             secret=config.STRIPE_WEBHOOK_SECRET,
@@ -48,7 +48,7 @@ class StripeService:
 
     @staticmethod
     async def cancel_payment_intent(payment_intent_id: str):
-        stripe.PaymentIntent.cancel(
+        await stripe.PaymentIntent.cancel(
             payment_intent_id,
         )
 

@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from pydantic.class_validators import validator
 
 
-class Booking(BaseModel):
+class Payment(BaseModel):
     apartment_id: int
     start_date: date
     end_date: date
@@ -23,7 +23,7 @@ class Booking(BaseModel):
         return v
 
 
-class BookingCreate(Booking):
+class PaymentCreate(Payment):
     payment_intent_id: str
     customer_id: str
     user_id: int
@@ -33,5 +33,5 @@ class BookingCreate(Booking):
     price: Decimal
 
 
-class BookingRetrieve(Booking):
+class PaymentRetrieve(Payment):
     price: Decimal

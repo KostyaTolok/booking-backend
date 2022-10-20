@@ -2,7 +2,7 @@ from fastapi_utils.tasks import repeat_every
 
 from app.core.config import config
 from app.core.db import SessionLocal
-from app.crud.payment import BookingCRUD
+from app.crud.payment import PaymentCRUD
 from app.services.stripe import StripeService
 
 
@@ -11,10 +11,10 @@ from app.services.stripe import StripeService
 )
 async def remove_expired_payment_intents():
     with SessionLocal() as db:
-        payment_intents = BookingCRUD.get_expired(db)
+        payment_intents = PaymentCRUD.get_expired(db)
 
         payment_intent_stripe_ids = [p.payment_intent_id for p in payment_intents]
         await StripeService.batch_cancel_payment_intents(payment_intent_stripe_ids)
 
         payment_intent_db_ids = [p.id for p in payment_intents]
-        BookingCRUD.batch_delete(db, payment_intent_db_ids)
+        PaymentCRUD.batch_delete(db, payment_intent_db_ids)
