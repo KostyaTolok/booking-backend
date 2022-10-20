@@ -1,7 +1,6 @@
 from django.urls import path, include
 from rest_framework_nested import routers
 
-
 from hotels.views import HotelsViewSet, HotelImagesViewSet
 
 app_name = 'hotels'

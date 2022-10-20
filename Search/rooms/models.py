@@ -2,7 +2,7 @@ from functools import partial
 
 from django.db import models
 
-from common.choices import EquipmentStates
+from rooms.choices import EquipmentStates
 from common.utils import path_and_rename
 
 

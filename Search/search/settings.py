@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+import mongoengine
 
 load_dotenv()
 
@@ -37,6 +38,7 @@ INSTALLED_APPS = [
     'hotels',
     'rooms',
     'cities',
+    'search_requests',
 ]
 
 MIDDLEWARE = [
@@ -148,3 +150,8 @@ AWS_S3_URL_EXPIRATION_TIME = os.getenv('AWS_S3_URL_EXPIRATION_TIME')
 DEFAULT_FILE_STORAGE = 'aws.storage.S3Storage'
 
 FIXTURE_DIRS = ["fixtures/"]
+
+MONGODB_CONNECTION_URL = os.getenv("MONGODB_CONNECTION_URL")
+SEARCH_REQUESTS_DATABASE_NAME = os.getenv("SEARCH_REQUESTS_DATABASE_NAME")
+
+mongoengine.connect(SEARCH_REQUESTS_DATABASE_NAME, host=MONGODB_CONNECTION_URL)
