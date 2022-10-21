@@ -3,11 +3,13 @@ version: "3.9"
 services:
   payments:
     build: ../Payments/
+    container_name: payments
     env_file:
       - ../Payments/.env
     networks:
-      - booking
+      - payments
       - web
+      - kafka
     ports:
       - "8002:8000"
     volumes:
@@ -17,6 +19,8 @@ services:
         condition: "service_started"
       rabbitmq:
         condition: "service_healthy"
+      kafka:
+        condition: "service_started"
   booking_db:
     image: postgres:12.0-alpine
     container_name: booking_db
@@ -25,7 +29,7 @@ services:
     env_file:
       - ../Payments/.env
     networks:
-      - booking
+      - payments
     expose:
       - "5432"
 
@@ -38,5 +42,8 @@ networks:
   web:
     external: true
     name: shared-web
-  booking:
+  payments:
     driver: bridge
+  kafka:
+    external: true
+    name: shared-kafka

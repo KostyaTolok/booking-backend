@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 
 from app.routers.dependences import get_active_token_payload, get_db
 from app import schemas
-from app.services.booking import PaymentServices
+from app.services.payment import PaymentServices
 
 router = APIRouter(tags=["booking"])
 

@@ -1,3 +1,5 @@
+import logging
+
 from fastapi import Header, Request, Depends, APIRouter
 from aiohttp import ClientSession
 from sqlalchemy.orm import Session
@@ -6,7 +8,7 @@ from app.core.config import config
 from app.crud.payment import PaymentCRUD
 from app.routers.dependences import get_active_token_payload, get_db, get_http_client
 from app import schemas
-from app.services.booking import PaymentServices
+from app.services.payment import PaymentServices
 from app.services.apartment import ApartmentServices
 from app.services.stripe import StripeService
 
@@ -55,12 +57,24 @@ async def payment_sheet(
     )
     PaymentCRUD.create(db, booking)
 
-    return {
+    payment_sheet = {
         "payment_intent": payment_intent.id,
         "ephemeral_key": ephemeral_key.secret,
-        "customer": customer["id"],
+        "customer": customer.id,
         "publishable_key": config.STRIPE_PUBLISHABLE_KEY,
     }
+
+    message = {
+        **payment_sheet,
+        "user_id": token_payload.sub,
+        "apartment_id": payload.apartment_id,
+        "start_date": payload.start_date,
+        "end_date": payload.end_date,
+        "price": total_price,
+    }
+    logging.info(f"Payment intent created. {message}.")
+
+    return payment_sheet
 
 
 @router.post("/webhook")
@@ -72,6 +86,8 @@ async def webhook_received(
 ):
     data = await request.body()
     event = StripeService.construct_event(data, stripe_signature)
+
+    logging.info(f"Received {event['type']} event.")
 
     if event["type"] == "payment_intent.succeeded":
         payment_intent = event["data"]["object"]

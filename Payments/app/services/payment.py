@@ -1,3 +1,4 @@
+import logging
 from datetime import date
 from decimal import Decimal
 
@@ -45,15 +46,18 @@ class PaymentServices:
             payment_db,
         )
 
-        await send_payment_confirmed_event(
-            {
-                "user_id": payment_db.user_id,
-                "apartment_id": payment_db.apartment_id,
-                "start_date": payment_db.start_date,
-                "end_date": payment_db.end_date,
-                "succeeded_at": payment_db.updated_at,
-                "price": payment_db.price,
-            }
+        message = {
+            "user_id": payment_db.user_id,
+            "apartment_id": payment_db.apartment_id,
+            "start_date": payment_db.start_date,
+            "end_date": payment_db.end_date,
+            "succeeded_at": payment_db.updated_at,
+            "price": payment_db.price,
+        }
+        await send_payment_confirmed_event(message)
+
+        logging.info(
+            f"Payment {payment_db.payment_intent_id} confirmed successfully. {message}"
         )
 
     @staticmethod
