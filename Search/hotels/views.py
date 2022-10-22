@@ -12,7 +12,7 @@ from hotels.filters import HotelFilter
 from hotels.models import Hotel, HotelImage, HotelView
 from hotels.permissions import IsHotelOwner
 from hotels.serializers import HotelSerializer, HotelListSerializer, HotelImageSerializer, HotelViewSerializer
-from hotels.services import add_hotel_image, extract_request_params
+from hotels.services import add_hotel_image
 from search_requests.models import SearchRequest
 from search_requests.serializers import SearchRequestSerializer
 
@@ -58,11 +58,10 @@ class HotelsViewSet(
         hotels = super().list(self, request, *args, **kwargs)
         if request.user is not None:
             user_id = request.user.get("user_id")
-            params = extract_request_params(request)
-            if params:
-                serializer = SearchRequestSerializer(data=params)
+            if request.GET:
+                serializer = SearchRequestSerializer(data=request.GET)
                 serializer.is_valid(raise_exception=True)
-                SearchRequest(**params, user=user_id).save()
+                SearchRequest(**serializer.data, user=user_id).save()
         return hotels
 
     @action(detail=False, methods=["get"], url_path="recently-viewed")

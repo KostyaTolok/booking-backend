@@ -1,10 +1,15 @@
+from collections import OrderedDict
+
 from rest_framework_mongoengine import serializers
 
 from search_requests.models import SearchRequest
-from search_requests.utils import search_request_params
 
 
 class SearchRequestSerializer(serializers.DocumentSerializer):
     class Meta:
         model = SearchRequest
-        fields = search_request_params
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation = OrderedDict([(key, value) for key, value in representation.items() if value is not None])
+        return representation
