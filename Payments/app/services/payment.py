@@ -81,7 +81,6 @@ class PaymentServices:
     ):
         return PaymentCRUD.get_by_user_id(db, user_id)
 
-
     @staticmethod
     def create_payment(
         db: Session,
