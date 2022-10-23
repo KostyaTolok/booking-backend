@@ -28,6 +28,9 @@ async def shutdown():
     await SingletonAmqp.close_amqp_connection()
 
 
+app.include_router(router, prefix=config.API_PREFIX)
+
+
 @retry(Exception, tries=5, delay=3)
 def run_migrations():
     alembic_cfg = Config("alembic.ini")
@@ -35,19 +38,18 @@ def run_migrations():
     command.upgrade(alembic_cfg, "head")
 
 
+@retry(Exception, tries=5, delay=5)
+def logging_setup():
+    kafka_handler_obj = KafkaLoggingHandler(
+        config.KAFKA_URL,
+        config.KAFKA_LOGGING_TOPIC_NAME,
+        security_protocol="PLAINTEXT",
+    )
+    logger = logging.getLogger()
+    logger.addHandler(kafka_handler_obj)
+    logger.setLevel(logging.INFO)
+
+
 # TODO run_migrations() broke logs
 run_migrations()
-
-app.include_router(router, prefix=config.API_PREFIX)
-
-KAFKA_BOOTSTRAP_SERVER = "kafka:9092"
-TOPIC = "payment"
-
-kafka_handler_obj = KafkaLoggingHandler(
-    KAFKA_BOOTSTRAP_SERVER,
-    TOPIC,
-    security_protocol="PLAINTEXT",
-)
-logger = logging.getLogger()
-logger.addHandler(kafka_handler_obj)
-logger.setLevel(logging.INFO)
+logging_setup()

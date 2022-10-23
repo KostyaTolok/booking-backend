@@ -2,7 +2,7 @@ import os
 from typing import Optional, Dict, Any
 
 from pydantic import BaseSettings, validator
-from pydantic.networks import PostgresDsn, AmqpDsn
+from pydantic.networks import PostgresDsn, AmqpDsn, KafkaDsn
 
 
 class Config(BaseSettings):
@@ -30,7 +30,7 @@ class Config(BaseSettings):
     POSTGRES_DB: str
     POSTGRES_HOST: str
     POSTGRES_PORT: str
-    DB_URL: PostgresDsn = None
+    DB_URL: Optional[PostgresDsn]
 
     @validator("DB_URL")
     def assemble_db_connection(cls, v: Optional[str], values: Dict[str, Any]) -> Any:
@@ -49,11 +49,11 @@ class Config(BaseSettings):
     RABBITMQ_PORT: str
     RABBITMQ_USER: str
     RABBITMQ_PASSWORD: str
-    RABBITMQ_URL: Optional[AmqpDsn] = None
+    RABBITMQ_URL: Optional[AmqpDsn]
 
     RABBITMQ_PAYMENT_EVENTS_EXCHANGE_NAME: str
 
-    @validator("RABBITMQ_URL", pre=True)
+    @validator("RABBITMQ_URL")
     def assemble_rabbit_connection(
         cls, v: Optional[str], values: Dict[str, Any]
     ) -> Any:
@@ -66,6 +66,18 @@ class Config(BaseSettings):
             host=values.get("RABBITMQ_HOST"),
             port=values.get("RABBITMQ_PORT"),
         )
+
+    KAFKA_HOST: str
+    KAFKA_PORT: str
+    KAFKA_URL: Optional[KafkaDsn]
+
+    KAFKA_LOGGING_TOPIC_NAME: str
+
+    @validator("KAFKA_URL")
+    def assemble_kafka_connection(cls, v: Optional[str], values: Dict[str, Any]) -> Any:
+        if isinstance(v, str):
+            return v
+        return f"{values.get('KAFKA_HOST')}:{values.get('KAFKA_PORT')}"
 
     class Config:
         env_file = ".env"
