@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action
+from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
@@ -12,6 +13,8 @@ from hotels.models import Hotel, HotelImage, HotelView
 from hotels.permissions import IsHotelOwner
 from hotels.serializers import HotelSerializer, HotelListSerializer, HotelImageSerializer, HotelViewSerializer
 from hotels.services import add_hotel_image
+from search_requests.models import SearchRequest
+from search_requests.serializers import SearchRequestSerializer
 
 
 class HotelsViewSet(
@@ -50,6 +53,16 @@ class HotelsViewSet(
             user_id = request.user.get("user_id")
             HotelView.objects.get_or_create(hotel=hotel, viewer=user_id)
         return super().retrieve(self, request, *args, **kwargs)
+
+    def list(self, request, *args, **kwargs):
+        hotels = super().list(self, request, *args, **kwargs)
+        if request.user is not None:
+            user_id = request.user.get("user_id")
+            if request.GET:
+                serializer = SearchRequestSerializer(data=request.GET)
+                serializer.is_valid(raise_exception=True)
+                SearchRequest(**serializer.data, user=user_id).save()
+        return hotels
 
     @action(detail=False, methods=["get"], url_path="recently-viewed")
     def get_recently_viewed(self, request):
