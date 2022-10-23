@@ -1,0 +1,42 @@
+version: "3.9"
+
+services:
+  payments:
+    build: ../Payments/
+    env_file:
+      - ../Payments/.env
+    networks:
+      - booking
+      - web
+    ports:
+      - "8002:8000"
+    volumes:
+      - "../Payments:/app"
+    depends_on:
+      booking_db:
+        condition: "service_started"
+      rabbitmq:
+        condition: "service_healthy"
+  booking_db:
+    image: postgres:12.0-alpine
+    container_name: booking_db
+    volumes:
+      - booking_db_data:/var/lib/postgresql/data/
+    env_file:
+      - ../Payments/.env
+    networks:
+      - booking
+    expose:
+      - "5432"
+
+
+volumes:
+  booking_db_data:
+
+
+networks:
+  web:
+    external: true
+    name: shared-web
+  booking:
+    driver: bridge

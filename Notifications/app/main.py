@@ -4,6 +4,7 @@ import logging
 
 from aio_pika import connect
 from aio_pika.abc import AbstractIncomingMessage
+from retrying_async import retry
 
 from config import config
 from send_email import send_email
@@ -21,9 +22,13 @@ async def on_message(message: AbstractIncomingMessage) -> None:
         )
 
 
+@retry(attempts=5, delay=3)
+async def get_rabbitmq_connection():
+    return await connect(config.RABBITMQ_URL)
+
+
 async def main() -> None:
-    # TODO retry connection
-    connection = await connect(config.RABBITMQ_URL)
+    connection = await get_rabbitmq_connection()
 
     async with connection:
         channel = await connection.channel()

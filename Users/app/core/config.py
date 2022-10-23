@@ -1,10 +1,9 @@
 import os
-import secrets
 from typing import List, Optional, Dict, Any
 
 from pydantic import BaseSettings, AnyHttpUrl, validator
 from dotenv import load_dotenv
-from pydantic.networks import PostgresDsn, RedisDsn, AmqpDsn
+from pydantic.networks import PostgresDsn, AmqpDsn
 
 load_dotenv()
 
@@ -18,7 +17,7 @@ class Config(BaseSettings):
     APP_HOST: str = "0.0.0.0"
     APP_PORT: int = 8001
 
-    SECRET_KEY: str = secrets.token_urlsafe(32)
+    SECRET_KEY: str = os.getenv("SECRET_KEY")
     TOKEN_BLACKLIST: bool = True
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     REFRESH_TOKEN_EXPIRE_MINUTES: int = 60 * 24
@@ -54,7 +53,9 @@ class Config(BaseSettings):
     RABBITMQ_URL: Optional[AmqpDsn] = None
 
     @validator("RABBITMQ_URL", pre=True)
-    def assemble_rabbit_connection(cls, v: Optional[str], values: Dict[str, Any]) -> Any:
+    def assemble_rabbit_connection(
+        cls, v: Optional[str], values: Dict[str, Any]
+    ) -> Any:
         if isinstance(v, str):
             return v
         return AmqpDsn.build(

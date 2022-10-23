@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+  users:
+    build: ../Users
+    container_name: users
+    env_file:
+      - ../Users/.env
+    networks:
+      - users
+      - web
+    ports:
+      - "8000:8000"
+    volumes:
+      - "../Users:/app"
+    depends_on:
+      users_db:
+        condition: "service_started"
+      rabbitmq:
+        condition: "service_healthy"
+  users_db:
+    image: postgres:12.0-alpine
+    container_name: users_db
+    volumes:
+      - users_db_data:/var/lib/postgresql/data/
+    env_file:
+       - ../Users/.env
+    networks:
+      - users
+    expose:
+      - "5432"
+
+
+volumes:
+  users_db_data:
+
+
+networks:
+  web:
+    external: true
+    name: shared-web
+  users:
+    driver: bridge
