@@ -67,6 +67,18 @@ async def payment_sheet(
 
     return payment_sheet
 
+    message = {
+        **payment_sheet,
+        "user_id": token_payload.sub,
+        "apartment_id": payload.apartment_id,
+        "start_date": payload.start_date,
+        "end_date": payload.end_date,
+        "price": total_price,
+    }
+    logging.info(f"Payment intent created. {message}.")
+
+    return payment_sheet
+
 
 @router.post("/webhook")
 async def webhook_received(

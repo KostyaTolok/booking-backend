@@ -18,4 +18,5 @@ services:
 
 networks:
   web:
+    driver: bridge
     name: shared-web

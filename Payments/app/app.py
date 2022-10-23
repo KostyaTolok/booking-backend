@@ -1,7 +1,10 @@
+import logging
+
 from fastapi import FastAPI
 from alembic.config import Config
 from alembic import command
 from retry import retry
+from kafka_logger.handlers import KafkaLoggingHandler
 
 from app.core.config import config
 from app.routers import router
@@ -33,6 +36,18 @@ def run_migrations():
 
 
 # TODO run_migrations() broke logs
-# run_migrations()
+run_migrations()
 
 app.include_router(router, prefix=config.API_PREFIX)
+
+KAFKA_BOOTSTRAP_SERVER = "kafka:9092"
+TOPIC = "payment"
+
+kafka_handler_obj = KafkaLoggingHandler(
+    KAFKA_BOOTSTRAP_SERVER,
+    TOPIC,
+    security_protocol="PLAINTEXT",
+)
+logger = logging.getLogger()
+logger.addHandler(kafka_handler_obj)
+logger.setLevel(logging.INFO)
