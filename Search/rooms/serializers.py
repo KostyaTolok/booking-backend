@@ -16,7 +16,7 @@ class RoomSerializer(serializers.ModelSerializer):
     )
     images = RoomImageSerializer(many=True, read_only=True)
 
-    price = serializers.DecimalField(min_value=0, max_value=10000, max_digits=6, decimal_places=2)
+    price = serializers.DecimalField(min_value=0, max_value=1000, max_digits=6, decimal_places=2)
     beds_number = serializers.IntegerField(min_value=0, max_value=10)
 
     class Meta:
