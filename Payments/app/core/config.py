@@ -14,6 +14,8 @@ class Config(BaseSettings):
     APP_HOST: str = "0.0.0.0"
     APP_PORT: int = 8080
 
+    SEARCH_SERVICE_API_URL: str
+
     SECRET_KEY: str
 
     PAYMENT_INTENT_EXPIRE_MINUTES: int = 15
@@ -40,7 +42,7 @@ class Config(BaseSettings):
             password=values.get("POSTGRES_PASSWORD"),
             host=values.get("POSTGRES_HOST"),
             port=values.get("POSTGRES_PORT"),
-            path=f"/{values.get('POSTGRES_DB') or ''}",
+            path=f"/{values.get('POSTGRES_DB', '')}",
         )
 
     RABBITMQ_HOST: str
@@ -48,6 +50,8 @@ class Config(BaseSettings):
     RABBITMQ_USER: str
     RABBITMQ_PASSWORD: str
     RABBITMQ_URL: Optional[AmqpDsn] = None
+
+    RABBITMQ_PAYMENT_EVENTS_EXCHANGE_NAME: str
 
     @validator("RABBITMQ_URL", pre=True)
     def assemble_rabbit_connection(
