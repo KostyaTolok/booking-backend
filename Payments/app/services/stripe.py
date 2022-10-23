@@ -4,6 +4,7 @@ from typing import List
 
 from async_stripe import stripe
 
+from app import schemas
 from app.core.config import config
 
 stripe.api_key = config.STRIPE_SECRET_KEY
@@ -36,6 +37,27 @@ class StripeService:
         )
 
     @staticmethod
+    async def crete_payment_sheet(
+        user_id: int,
+        customer_email: str,
+        price: Decimal,
+    ) -> schemas.PaymentSheet:
+        customer, ephemeral_key = await StripeService.create_customer(
+            user_id=user_id,
+        )
+        payment_intent = await StripeService.create_payment_intent(
+            customer_id=customer.id,
+            customer_email=customer_email,
+            price=price,
+        )
+        return schemas.PaymentSheet(
+            payment_intent_id=payment_intent.id,
+            ephemeral_key=ephemeral_key.secret,
+            customer_id=customer.id,
+            publishable_key=config.STRIPE_PUBLISHABLE_KEY,
+        )
+
+    @staticmethod
     def construct_event(
         payload: bytes,
         signature: str,
@@ -48,9 +70,7 @@ class StripeService:
 
     @staticmethod
     async def cancel_payment_intent(payment_intent_id: str):
-        await stripe.PaymentIntent.cancel(
-            payment_intent_id,
-        )
+        await stripe.PaymentIntent.cancel(payment_intent_id)
 
     @staticmethod
     async def batch_cancel_payment_intents(payment_intent_ids: List[str]):

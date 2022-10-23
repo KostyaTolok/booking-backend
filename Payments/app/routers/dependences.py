@@ -1,7 +1,7 @@
 from typing import Generator
 
 import aiohttp
-from fastapi import Depends, HTTPException
+from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2
 from pydantic.error_wrappers import ValidationError
 
@@ -30,7 +30,10 @@ def get_token_payload(token: str = Depends(reusable_oauth2)) -> Token:
     try:
         token = Token(**payload)
     except ValidationError as e:
-        raise HTTPException(status_code=403, detail="Token is invalid or expired")
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Token is invalid or expired",
+        )
     return token
 
 
@@ -38,7 +41,10 @@ def get_active_token_payload(
     token_payload: Token = Depends(get_token_payload),
 ) -> Token:
     if not token_payload.active:
-        raise HTTPException(status_code=403, detail="Inactive user")
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Inactive user",
+        )
     return token_payload
 
 
@@ -47,6 +53,7 @@ def get_active_superuser_token_payload(
 ) -> Token:
     if token_payload.role != "admin":
         raise HTTPException(
-            status_code=403, detail="The user doesn't have enough privileges"
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="The user doesn't have enough privileges",
         )
     return token_payload

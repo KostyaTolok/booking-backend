@@ -37,6 +37,7 @@ class HotelsViewSet(
         'create': (IsAdmin,),
         'update': (IsAdmin | IsHotelOwner,),
         'destroy': (IsAdmin | IsHotelOwner,),
+        'get_recently_viewed': (IsAuthenticated,),
         'default': (IsAuthenticated,),
     }
     queryset = Hotel.objects.all()
@@ -44,9 +45,10 @@ class HotelsViewSet(
     filterset_class = HotelFilter
 
     def retrieve(self, request, *args, **kwargs):
-        hotel = self.get_object()
-        user_id = request.user.get("user_id")
-        HotelView.objects.get_or_create(hotel=hotel, viewer=user_id)
+        if request.user is not None:
+            hotel = self.get_object()
+            user_id = request.user.get("user_id")
+            HotelView.objects.get_or_create(hotel=hotel, viewer=user_id)
         return super().retrieve(self, request, *args, **kwargs)
 
     @action(detail=False, methods=["get"], url_path="recently-viewed")

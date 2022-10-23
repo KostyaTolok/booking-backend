@@ -1,0 +1,30 @@
+[
+  {
+    "model": "hotels.Hotel",
+    "pk": 1,
+    "fields": {
+      "name": "Hilton Hotel",
+      "description": "This is description",
+      "address": "Tolstogo st. 8",
+      "rating": 8.3,
+      "has_parking": true,
+      "has_wifi": true,
+      "owner": 1,
+      "city": 1
+    }
+  },
+  {
+    "model": "hotels.Hotel",
+    "pk": 2,
+    "fields": {
+      "name": "Beryozovka",
+      "description": "This is description",
+      "address": "Beryozovskaya st. 64",
+      "rating": 6.6,
+      "has_parking": false,
+      "has_wifi": true,
+      "owner": 2,
+      "city": 2
+    }
+  }
+]

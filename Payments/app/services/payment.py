@@ -2,21 +2,31 @@ import logging
 from datetime import date
 from decimal import Decimal
 
-from fastapi import HTTPException
+from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
+from app import schemas, models
 from app.crud.payment import PaymentCRUD
-from app.events import send_payment_confirmed_event
+from app.events import send_payment_event
 
 
 class PaymentServices:
     @staticmethod
-    def calculate_price(*, start_date: date, end_date: date, price_per_night: Decimal):
+    def calculate_price(
+        *,
+        start_date: date,
+        end_date: date,
+        price_per_night: Decimal,
+    ):
         return (end_date - start_date).days * price_per_night
 
     @staticmethod
     def check_booking_dates_availability(
-        db: Session, *, apartment_id: int, start_date: date, end_date: date
+        db: Session,
+        *,
+        apartment_id: int,
+        start_date: date,
+        end_date: date,
     ):
         date_overlapping_apartments = PaymentCRUD.get_date_overlapping(
             db,
@@ -26,7 +36,10 @@ class PaymentServices:
         )
 
         if date_overlapping_apartments:
-            raise HTTPException(status_code=409, detail="Apartments are booked")
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="Apartments are booked",
+            )
 
     @staticmethod
     async def confirm_payment(
@@ -39,7 +52,7 @@ class PaymentServices:
         )
 
         if not payment_db:
-            raise HTTPException(status_code=404)
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
         payment_db = PaymentCRUD.confirm(
             db,
@@ -47,6 +60,7 @@ class PaymentServices:
         )
 
         message = {
+            "message": "payment confirmed successfully",
             "user_id": payment_db.user_id,
             "apartment_id": payment_db.apartment_id,
             "start_date": payment_db.start_date,
@@ -54,7 +68,7 @@ class PaymentServices:
             "succeeded_at": payment_db.updated_at,
             "price": payment_db.price,
         }
-        await send_payment_confirmed_event(message)
+        await send_payment_event(message)
 
         logging.info(
             f"Payment {payment_db.payment_intent_id} confirmed successfully. {message}"
@@ -66,3 +80,11 @@ class PaymentServices:
         user_id: int,
     ):
         return PaymentCRUD.get_by_user_id(db, user_id)
+
+
+    @staticmethod
+    def create_payment(
+        db: Session,
+        payment: schemas.PaymentCreate,
+    ) -> models.BookingPayment:
+        return PaymentCRUD.create(db, payment)
