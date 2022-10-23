@@ -19,7 +19,11 @@ class Token:
     token_db: models.Token = None
     token_str: str = None
 
-    def __init__(self, token: Union[str, models.Token] = None, verify=True):
+    def __init__(
+        self,
+        token: Union[str, models.Token] = None,
+        verify: bool = True,
+    ):
         if self.token_type is None or self.lifetime is None:
             raise ValueError("Cannot create token with no type or lifetime")
 
@@ -32,7 +36,7 @@ class Token:
         self.current_time = datetime.utcnow()
 
         if token is not None:
-            self.payload = self._decode_token(self.token_str)
+            self.payload = self._decode_token(self.token_str, verify)
             if verify:
                 self.verify()
         else:
@@ -43,9 +47,17 @@ class Token:
             self.set_expiration(timedelta(minutes=self.lifetime))
 
     @staticmethod
-    def _decode_token(token: str):
+    def _decode_token(token: str, verify: bool = True):
         try:
-            payload = jwt.decode(token, config.SECRET_KEY, algorithms=[ALGORITHM])
+            payload = jwt.decode(
+                token,
+                config.SECRET_KEY,
+                algorithms=[ALGORITHM],
+                options={
+                    "require": ["exp", "jti", "type"],
+                    "verify_exp": verify,
+                },
+            )
         except (jwt.exceptions.InvalidTokenError, jwt.exceptions.ExpiredSignatureError):
             raise InvalidToken("Token is invalid or expired")
 
@@ -90,7 +102,10 @@ class Token:
 
 class BlacklistToken(Token):
     def __init__(
-        self, db: Session, token: Union[str, models.Token] = None, verify=True
+        self,
+        db: Session,
+        token: Union[str, models.Token] = None,
+        verify: bool = True,
     ):
         self.db = db
         super().__init__(token, verify)
