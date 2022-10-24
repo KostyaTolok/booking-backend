@@ -22,7 +22,7 @@ jobs:
         run: |
           echo "${PRIVATE_PEM_KEY}" > backend_server_key.pem
           chmod 400 backend_server_key.pem
-          chmod +x run-docker.sh
+          chmod +x run-docker-local.sh
           rsync \
             --archive \
             --verbose \
