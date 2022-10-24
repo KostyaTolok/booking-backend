@@ -1,5 +1,5 @@
 import os
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, Union
 
 from pydantic import BaseSettings, validator
 from pydantic.networks import PostgresDsn, AmqpDsn, KafkaDsn
@@ -67,6 +67,23 @@ class Config(BaseSettings):
             port=values.get("RABBITMQ_PORT"),
         )
 
+    KAFKA_LOGGING: bool = False
+
+    class Config:
+        env_file = ".env"
+
+
+class DevelopmentConfig(Config):
+    DEBUG: str = True
+    ENV: str = "development"
+
+
+class ProductionConfig(Config):
+    DEBUG: str = False
+    ENV: str = "production"
+
+    KAFKA_LOGGING: bool = True
+
     KAFKA_HOST: str
     KAFKA_PORT: str
     KAFKA_URL: Optional[KafkaDsn]
@@ -79,22 +96,8 @@ class Config(BaseSettings):
             return v
         return f"{values.get('KAFKA_HOST')}:{values.get('KAFKA_PORT')}"
 
-    class Config:
-        env_file = ".env"
 
-
-class DevelopmentConfig(Config):
-    DEBUG: str = True
-    ENV: str = "development"
-    pass
-
-
-class ProductionConfig(Config):
-    DEBUG: str = False
-    ENV: str = "production"
-
-
-def get_config():
+def get_config() -> Union[DevelopmentConfig, ProductionConfig]:
     env = os.getenv("ENVIRONMENT", "dev")
     config_type = {
         "dev": DevelopmentConfig(),
@@ -103,4 +106,4 @@ def get_config():
     return config_type[env]
 
 
-config: Config = get_config()
+config: Union[DevelopmentConfig, ProductionConfig] = get_config()

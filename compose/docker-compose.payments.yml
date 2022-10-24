@@ -19,8 +19,6 @@ services:
         condition: "service_started"
       rabbitmq:
         condition: "service_healthy"
-      kafka:
-        condition: "service_started"
   booking_db:
     image: postgres:12.0-alpine
     container_name: booking_db

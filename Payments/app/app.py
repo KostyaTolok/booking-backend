@@ -52,4 +52,6 @@ def logging_setup():
 
 # TODO run_migrations() broke logs
 run_migrations()
-logging_setup()
+
+if config.KAFKA_LOGGING:
+    logging_setup()
