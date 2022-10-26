@@ -140,3 +140,5 @@ dmypy.json
 
 # AWS EC2 .pem key
 backend_server_key.pem
+
+Search/static/

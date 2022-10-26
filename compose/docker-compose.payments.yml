@@ -11,7 +11,7 @@ services:
       - web
       - kafka
     ports:
-      - "8002:8000"
+      - "7000:7000"
     volumes:
       - "../Payments:/app"
     depends_on:

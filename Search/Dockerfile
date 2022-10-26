@@ -12,9 +12,9 @@ COPY ./Pipfile.lock /Pipfile.lock
 
 RUN pipenv install --deploy --system
 
-COPY ./entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-ENTRYPOINT ["/entrypoint.sh"]
+COPY ./entrypoint.prod.sh /entrypoint.prod.sh
+RUN chmod +x /entrypoint.prod.sh
+ENTRYPOINT ["/entrypoint.prod.sh"]
 
 EXPOSE 3000
 

@@ -21,6 +21,7 @@ drf-nested-routers = "*"
 pymongo = "*"
 mongoengine = "*"
 django-rest-framework-mongoengine = "*"
+gunicorn = "*"
 
 [dev-packages]
 
