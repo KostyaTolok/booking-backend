@@ -17,7 +17,7 @@ class Token(BaseModel):
     type: str
     role: Optional[str]
     active: Optional[bool]
-    extra: Optional[dict]
+    email: Optional[str]
 
 
 class TokenCreate(BaseModel):

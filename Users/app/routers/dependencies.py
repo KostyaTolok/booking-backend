@@ -27,7 +27,7 @@ def get_db() -> Generator:
 def get_current_user(
     db: Session = Depends(get_db), token: str = Depends(reusable_oauth2)
 ) -> models.User:
-    payload = tokens.AccessToken(db, token=token)
+    payload = tokens.AccessToken(token=token)
     user = UserService.get_user(db, id=payload["sub"])
     if not user:
         raise exceptions.NotFoundException(message="User not found")
@@ -38,7 +38,7 @@ def get_current_active_user(
     current_user: models.User = Depends(get_current_user),
 ) -> models.User:
     if not current_user.is_active:
-        raise exceptions.BadRequestException(message="Inactive user")
+        raise exceptions.ForbiddenException(message="Inactive user")
     return current_user
 
 
@@ -46,5 +46,7 @@ def get_current_active_superuser(
     current_user: models.User = Depends(get_current_user),
 ) -> models.User:
     if not current_user.is_superuser:
-        raise exceptions.BadRequestException(message="The user doesn't have enough privileges")
+        raise exceptions.ForbiddenException(
+            message="The user doesn't have enough privileges"
+        )
     return current_user
