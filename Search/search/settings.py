@@ -42,9 +42,9 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -94,11 +94,11 @@ WSGI_APPLICATION = 'search.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.getenv("DATABASE_NAME"),
-        'USER': os.getenv("DATABASE_USER"),
-        'PASSWORD': os.getenv("DATABASE_PASSWORD"),
-        'HOST': os.getenv("DATABASE_HOST"),
-        'PORT': os.getenv("DATABASE_PORT"),
+        'NAME': os.getenv("POSTGRES_DB"),
+        'USER': os.getenv("POSTGRES_USER"),
+        'PASSWORD': os.getenv("POSTGRES_PASSWORD"),
+        'HOST': os.getenv("POSTGRES_HOST"),
+        'PORT': os.getenv("POSTGRES_PORT"),
     }
 }
 
@@ -134,7 +134,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -152,6 +153,8 @@ DEFAULT_FILE_STORAGE = 'aws.storage.S3Storage'
 FIXTURE_DIRS = ["fixtures/"]
 
 MONGODB_CONNECTION_URL = os.getenv("MONGODB_CONNECTION_URL")
-SEARCH_REQUESTS_DATABASE_NAME = os.getenv("SEARCH_REQUESTS_DATABASE_NAME")
+SEARCH_REQUESTS_DATABASE_NAME = os.getenv("MONGO_INITDB_DATABASE")
 
 mongoengine.connect(SEARCH_REQUESTS_DATABASE_NAME, host=MONGODB_CONNECTION_URL)
+
+SWAGGER_BASE_URL = os.getenv("SWAGGER_BASE_URL")
