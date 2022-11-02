@@ -12,7 +12,8 @@ from app.tasks import remove_expired_payment_intents
 from app.core.http_session import SingletonAiohttp
 from app.core.amqp_connection import SingletonAmqp
 
-app = FastAPI()
+
+app = FastAPI(root_path=config.ROOT_PATH)
 
 
 @app.on_event("startup")

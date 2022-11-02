@@ -15,7 +15,7 @@ async def on_message(message: AbstractIncomingMessage) -> None:
         body = json.loads(message.body)
         send_email(
             sender=config.EMAILS_FROM_EMAIL,
-            recipients=("booking-mails@mail.ru",),
+            recipients=(body["email"],),
             subject=body["subject"],
             html=body.get("html", ""),
             text=body.get("text", ""),
