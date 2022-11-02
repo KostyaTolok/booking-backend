@@ -9,8 +9,9 @@ services:
     networks:
       - users
       - web
-    ports:
-      - "8000:8000"
+      - rabbitmq
+    expose:
+      - "8000"
     volumes:
       - "../Users:/app"
     depends_on:
@@ -39,5 +40,8 @@ networks:
   web:
     external: true
     name: shared-web
+  rabbitmq:
+    external: true
+    name: shared-rabbitmq
   users:
     driver: bridge

@@ -3,7 +3,7 @@ from fastapi.responses import JSONResponse
 from starlette.middleware.cors import CORSMiddleware
 from alembic.config import Config
 from alembic import command
-from retry import retry
+from retrying_async import retry
 
 from app.routers import router as api_router
 from app.core.config import config
@@ -31,7 +31,7 @@ if config.BACKEND_CORS_ORIGINS:
     )
 
 
-@retry(Exception, tries=5, delay=3)
+@retry(attempts=5, delay=3)
 def run_migrations():
     alembic_cfg = Config('alembic.ini')
     alembic_cfg.set_main_option('sqlalchemy.url', config.DB_URL)

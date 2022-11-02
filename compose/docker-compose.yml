@@ -24,13 +24,16 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - web
-    ports:
-      - "5676:5672"
-      - "15676:15672"
+      - rabbitmq
+    expose:
+      - "5672"
+      - "15672"
 
 
 networks:
   web:
     driver: bridge
     name: shared-web
+  rabbitmq:
+    driver: bridge
+    name: shared-rabbitmq

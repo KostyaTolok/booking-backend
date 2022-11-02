@@ -10,8 +10,9 @@ services:
       - payments
       - web
       - kafka
-    ports:
-      - "7000:8000"
+      - rabbitmq
+    expose:
+      - "7000"
     volumes:
       - "../Payments:/app"
     depends_on:
@@ -40,8 +41,11 @@ networks:
   web:
     external: true
     name: shared-web
-  payments:
-    driver: bridge
+  rabbitmq:
+    external: true
+    name: shared-rabbitmq
   kafka:
     external: true
     name: shared-kafka
+  payments:
+    driver: bridge
