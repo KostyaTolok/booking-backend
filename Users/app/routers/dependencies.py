@@ -12,7 +12,7 @@ from app.core.utils.security.jwt import tokens
 from app.services.user import UserService
 
 reusable_oauth2 = OAuth2PasswordBearer(
-    tokenUrl=f"{config.API_PREFIX}/{config.API_CURRENT_VERSION}/auth/login/form"
+    tokenUrl=f"{config.ROOT_PATH}/{config.API_PREFIX}/{config.API_CURRENT_VERSION}/auth/login/form"
 )
 
 

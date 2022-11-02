@@ -21,7 +21,6 @@ def send_email(
             'Subject': {'Data': subject},
             'Body': {
                 'Text': {'Data': text},
-                'Html': {'Data': html}
             }
         }
     }
