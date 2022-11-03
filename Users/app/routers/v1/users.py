@@ -43,6 +43,15 @@ def update_user_me(
     return UserService.update_user(db, db_obj=current_user, obj_in=user_in)
 
 
+@router.delete("/me", response_model=schemas.User)
+def delete_user_me(
+        *,
+        db: Session = Depends(dependencies.get_db),
+        current_user: models.User = Depends(dependencies.get_current_active_user),
+):
+    return UserService.delete_user(db, current_user.id)
+
+
 @router.get("/me", response_model=schemas.User)
 def read_user_me(
         current_user: models.User = Depends(dependencies.get_current_active_user),
@@ -70,3 +79,13 @@ def update_user(
 ):
     user = UserService.get_user(db, id=user_id)
     return UserService.update_user(db, db_obj=user, obj_in=user_in)
+
+
+@router.put("/{user_id}", response_model=schemas.User)
+def update_user(
+        *,
+        db: Session = Depends(dependencies.get_db),
+        user_id: int,
+        current_user: models.User = Depends(dependencies.get_current_active_superuser),
+):
+    return UserService.delete_user(db, user_id)

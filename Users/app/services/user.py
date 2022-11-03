@@ -57,3 +57,7 @@ class UserService:
     @staticmethod
     def update_user(db, *, db_obj: User, obj_in: Union[UserUpdate, Dict[str, Any]]) -> User:
         return crud.user.update(db, db_obj=db_obj, obj_in=obj_in)
+
+    @staticmethod
+    def delete_user(db, user_id: int) -> User:
+        return crud.user.remove(db, user_id)
