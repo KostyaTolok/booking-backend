@@ -27,21 +27,3 @@ async def send_email(*, email: str, subject: str, html: str = None, text: str = 
             Message(json.dumps(message).encode('utf-8')),
             routing_key=queue.name,
         )
-
-
-async def send_reset_password_email(email: str, token: str) -> None:
-    message = {
-        "email": email,
-        "subject": "",
-        "text": token,
-    }
-    await send_email(**message)
-
-
-async def send_confirm_email(email: str, code: str) -> None:
-    message = {
-        "email": email,
-        "subject": "",
-        "text": code,
-    }
-    await send_email(**message)
