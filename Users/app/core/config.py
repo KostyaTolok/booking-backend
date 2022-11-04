@@ -23,6 +23,8 @@ class Config(BaseSettings):
 
     USERS_OPEN_REGISTRATION: bool = False
 
+    MOBILE_URL_SCHEME = "booking-mobile"
+
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str
     POSTGRES_DB: str
