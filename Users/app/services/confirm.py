@@ -4,7 +4,7 @@ from app import crud
 from app.core.config import config
 from app.core import exceptions
 from app.core.utils.security import confirmation_code
-from app.core.utils.email import send_confirm_email, send_reset_password_email
+from app.services.email import send_confirm_email, send_reset_password_email
 from app.models import User
 from app.core.utils.security.jwt import tokens
 from app.services.user import UserService
