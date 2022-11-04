@@ -81,8 +81,8 @@ def update_user(
     return UserService.update_user(db, db_obj=user, obj_in=user_in)
 
 
-@router.put("/{user_id}", response_model=schemas.User)
-def update_user(
+@router.delete("/{user_id}", response_model=schemas.User)
+def delete_user(
         *,
         db: Session = Depends(dependencies.get_db),
         user_id: int,
