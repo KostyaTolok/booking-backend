@@ -142,3 +142,5 @@ dmypy.json
 backend_server_key.pem
 
 Search/static/
+
+Search/.env.local

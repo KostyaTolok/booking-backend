@@ -36,10 +36,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
         if user_id is None:
             raise AuthenticationFailed("User id not provided")
 
-        if not user_id.isdigit():
-            raise AuthenticationFailed("User id is incorrect")
-
-        return int(user_id)
+        return user_id
 
     def get_role(self, payload):
         role = payload.get("role")
