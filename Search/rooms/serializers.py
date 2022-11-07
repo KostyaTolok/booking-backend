@@ -29,6 +29,7 @@ class RoomSerializer(serializers.ModelSerializer):
             "description",
             "price",
             "beds_number",
+            "rooms_number",
             "equipment_state",
             "has_washing_machine",
             "has_kitchen",
