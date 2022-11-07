@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'rooms',
     'cities',
     'search_requests',
+    'booking',
 ]
 
 MIDDLEWARE = [
@@ -120,6 +121,20 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+}
+
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
@@ -158,3 +173,6 @@ SEARCH_REQUESTS_DATABASE_NAME = os.getenv("MONGO_INITDB_DATABASE")
 mongoengine.connect(SEARCH_REQUESTS_DATABASE_NAME, host=MONGODB_CONNECTION_URL)
 
 SWAGGER_BASE_URL = os.getenv("SWAGGER_BASE_URL")
+
+BOOKING_BROKER_URL = os.getenv("BOOKING_BROKER_URL")
+BOOKING_QUEUE_NAME = os.getenv("BOOKING_QUEUE_NAME")
