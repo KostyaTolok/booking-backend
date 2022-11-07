@@ -32,7 +32,7 @@ class Consumer(threading.Thread):
         try:
             message = json.loads(body.decode())
             self.logger.info(f"Booking received: {message}")
-            room_id = message.pop("room", None)
+            room_id = message.pop("apartment_id", None)
             room = Room.objects.get(id=room_id)
             Booking.objects.create(**message, room=room)
         except Exception as e:

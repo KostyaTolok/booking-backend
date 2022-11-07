@@ -11,6 +11,7 @@ class Room(models.Model):
     description = models.CharField(verbose_name="Room description", max_length=200, blank=True, null=True)
     price = models.DecimalField(verbose_name="Room price", max_digits=6, decimal_places=2)
     beds_number = models.PositiveIntegerField(verbose_name="Room beds number")
+    rooms_number = models.PositiveIntegerField(verbose_name="Rooms number")
     equipment_state = models.PositiveIntegerField(
         verbose_name="Room equipment state",
         choices=EquipmentStates.choices,
