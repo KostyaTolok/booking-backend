@@ -47,7 +47,7 @@ class RoomListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Room
-        fields = ("id", "name", "first_image", "price", "hotel")
+        fields = ("id", "name", "first_image", "description", "price", "hotel")
 
     def get_first_image(self, obj):
         image = obj.images.first()
