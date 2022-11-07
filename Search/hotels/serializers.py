@@ -55,7 +55,7 @@ class HotelListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Hotel
-        fields = ("id", "name", "first_image", "rating", "min_price", "city_name")
+        fields = ("id", "name", "first_image", "description", "rating", "min_price", "city_name")
 
     def get_min_price(self, obj):
         query = obj.rooms.all().values_list('price', flat=True).aggregate(Min('price'))
