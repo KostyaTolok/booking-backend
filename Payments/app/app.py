@@ -3,7 +3,7 @@ import logging
 from fastapi import FastAPI
 from alembic.config import Config
 from alembic import command
-from retry import retry
+from retrying_async import retry
 from kafka_logger.handlers import KafkaLoggingHandler
 
 from app.core.config import config
@@ -12,10 +12,12 @@ from app.tasks import remove_expired_payment_intents
 from app.core.http_session import SingletonAiohttp
 from app.core.amqp_connection import SingletonAmqp
 
-app = FastAPI()
+
+app = FastAPI(root_path=config.ROOT_PATH)
 
 
 @app.on_event("startup")
+@retry(attempts=5, delay=5)
 async def startup():
     SingletonAiohttp.get_aiohttp_client()
     await SingletonAmqp.get_amqp_connection()
@@ -31,14 +33,14 @@ async def shutdown():
 app.include_router(router, prefix=config.API_PREFIX)
 
 
-@retry(Exception, tries=5, delay=3)
+@retry(attempts=5, delay=3)
 def run_migrations():
     alembic_cfg = Config("alembic.ini")
     alembic_cfg.set_main_option("sqlalchemy.url", config.DB_URL)
     command.upgrade(alembic_cfg, "head")
 
 
-@retry(Exception, tries=5, delay=5)
+@retry(attempts=5, delay=5)
 def logging_setup():
     kafka_handler_obj = KafkaLoggingHandler(
         config.KAFKA_URL,

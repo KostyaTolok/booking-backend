@@ -28,7 +28,7 @@ jobs:
             --verbose \
             --compress \
             --delete-before \
-            --exclude={"*.pem","*.env","*/__pycache__"} \
+            --exclude={"*.pem","*.env","*/__pycache__","*/static/*"} \
             --rsh="ssh -o StrictHostKeyChecking=no -i backend_server_key.pem" \
             `pwd` ${USERNAME}@${HOSTNAME}:/home/${USERNAME}/
           ssh -o StrictHostKeyChecking=no -i backend_server_key.pem ${USERNAME}@${HOSTNAME} "cd ${REPOSITORY_NAME}; ./run-docker-local.sh -d"

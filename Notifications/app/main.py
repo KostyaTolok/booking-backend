@@ -13,13 +13,16 @@ from send_email import send_email
 async def on_message(message: AbstractIncomingMessage) -> None:
     async with message.process():
         body = json.loads(message.body)
-        send_email(
-            sender=config.EMAILS_FROM_EMAIL,
-            recipients=("booking-mails@mail.ru",),
-            subject=body["subject"],
-            html=body.get("html", ""),
-            text=body.get("text", ""),
-        )
+        try:
+            send_email(
+                sender=config.EMAILS_FROM_EMAIL,
+                recipients=(body["email"],),
+                subject=body["subject"],
+                html=body.get("html", ""),
+                text=body.get("text", ""),
+            )
+        except Exception as e:
+            logging.error(e)
 
 
 @retry(attempts=5, delay=3)

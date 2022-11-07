@@ -13,6 +13,6 @@ PyJWT==2.5.0
 pyotp==2.7.0
 python-dotenv==0.21.0
 python-multipart==0.0.5
-retry==0.9.2
+retrying-async==2.0.0
 SQLAlchemy==1.4.41
 uvicorn==0.18.3

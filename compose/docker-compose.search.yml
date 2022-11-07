@@ -9,8 +9,9 @@ services:
     networks:
       - search
       - web
-    ports:
-      - "3000:3000"
+      - rabbitmq
+    expose:
+      - "3000"
     volumes:
       - "../Search:/search"
     depends_on:
@@ -51,5 +52,8 @@ networks:
   web:
     external: true
     name: shared-web
+  rabbitmq:
+    external: true
+    name: shared-rabbitmq
   search:
     driver: bridge
