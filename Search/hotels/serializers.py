@@ -34,6 +34,8 @@ class HotelSerializer(serializers.ModelSerializer):
             "rating",
             "has_parking",
             "has_wifi",
+            "latitude",
+            "longitude",
             "owner",
         )
         extra_kwargs = {"city": {'write_only': True}}

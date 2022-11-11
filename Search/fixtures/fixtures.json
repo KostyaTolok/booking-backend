@@ -1,0 +1,533 @@
+[
+{
+  "model": "hotels.hotel",
+  "pk": 1,
+  "fields": {
+    "name": "DoubleTree by Hilton Hotel",
+    "description": "Современная гостиница ─ DoubleTree by Hilton Hotel Minsk ─ расположена в центре Минска, в шаговой доступности от Старого города, основных достопримечательностей, в том числе, выставочного центра \"Bel Expo II\". Станция метро \"Фрунзенская\" находится в 800 м., а Национальный аэропорт Минск ─ в 45 км. от отеля. Здесь Вас встретят теплым шоколадным печеньем, предоставят комфортные условия проживания и высококлассное обслуживание!",
+    "address": "Проспект Победителей, 9, Минск",
+    "rating": "5.0",
+    "has_parking": true,
+    "has_wifi": true,
+    "latitude": "53.908089",
+    "longitude": "27.548177",
+    "owner": 1,
+    "city": 1
+  }
+},
+{
+  "model": "hotels.hotel",
+  "pk": 2,
+  "fields": {
+    "name": "Березовка",
+    "description": "Апартаменты «Beryozovka» расположены в микрорайоне «Березовка» города Брест.\n\nК размещению представлены апартаменты вместимостью от пяти до девяти человек. Среди удобств хороший Wi-Fi, спутниковое телевидение, ванная комната и терраса с мебелью.\n\nВо всех апартаментах имеется кухня со всей необходимой бытовой техникой, в том числе плитой и холодильником, а также набором посуды и удобным обеденным уголком.",
+    "address": "ул. Берёзовская, д. 64/1, Брест",
+    "rating": "3.3",
+    "has_parking": false,
+    "has_wifi": true,
+    "latitude": "52.118984",
+    "longitude": "23.724388",
+    "owner": 1,
+    "city": 2
+  }
+},
+{
+  "model": "hotels.hotel",
+  "pk": 4,
+  "fields": {
+    "name": "Гостиница Беларусь",
+    "description": "Этот уютный многоэтажный отель расположен в парковой зоне с видом на реку Свислочь. Отсюда 15 минут ходьбы до ближайшей станции метро и 3 км до Национального художественного музея Республики Беларусь.\n\nВ простых номерах отеля есть бесплатный Wi-Fi, мини-бары, телевизоры с плоским экраном и зоны отдыха (некоторые с диванами-кроватями). В люксах с одной или двумя спальнями также есть гостиные, а в апартаментах – кухни и джакузи. Из номеров открывается вид на парк и реку.\n\nНа территории отеля есть два кафе, бары и шикарный ресторан с террасой на крыше и панорамным видом на реку. Также в распоряжении гостей крытый бассейн с водными горками, тренажерный зал и сауна.",
+    "address": "ул. Сторожовская ул 15, Минск",
+    "rating": "5.0",
+    "has_parking": true,
+    "has_wifi": true,
+    "latitude": "53.915286",
+    "longitude": "27.550728",
+    "owner": 1,
+    "city": 1
+  }
+},
+{
+  "model": "hotels.hotel",
+  "pk": 5,
+  "fields": {
+    "name": "Гостиница Спутник",
+    "description": "Простой отель, расположенный на зеленой улице. В 14 минутах ходьбы находится станция метро, в 6 км – площадь Победы, а в 11 км – минский ботанический сад.\n\nВ просто обставленных номерах есть бесплатный Wi-Fi, телевизоры и мини-холодильники. Также гости могут забронировать семейный номер. Доступно обслуживание номеров.\n\nГости могут заказать еду в ресторане с классическим интерьером или круглосуточном баре. Кроме того, на территории отеля работает салон красоты и спа-центр с крытым бассейном, сауной и тренажерным залом. Завтрак по системе \"шведский стол\" и парковка предоставляются за дополнительную плату",
+    "address": "ул. Брилевская 2, Минск",
+    "rating": "3.5",
+    "has_parking": false,
+    "has_wifi": true,
+    "latitude": "53.878677",
+    "longitude": "27.533509",
+    "owner": 1,
+    "city": 1
+  }
+},
+{
+  "model": "hotels.hotel",
+  "pk": 6,
+  "fields": {
+    "name": "Гостиница «Айти Тайм»",
+    "description": "Этот простой отель расположен напротив Парка высоких технологий. В 10 минутах ходьбы находится парк-музей камней, а в 5 км – Национальная библиотека Беларуси, а также станция метро \"Борисовский тракт\".\n\nВ скромных номерах есть бесплатный Wi-Fi, телевизоры с плоским экраном и ванные комнаты. Доступно обслуживание в номерах.\n\nНа территории отеля есть простое кафе и зал для проведения мероприятий. Парковка и завтрак \"шведский стол\" бесплатные.",
+    "address": "ул. Академика Купревича 4, Минск",
+    "rating": "4.2",
+    "has_parking": false,
+    "has_wifi": true,
+    "latitude": "53.926572",
+    "longitude": "27.686354",
+    "owner": 1,
+    "city": 1
+  }
+},
+{
+  "model": "hotels.hotel",
+  "pk": 8,
+  "fields": {
+    "name": "Алеся",
+    "description": "Гостиница «Алеся» основана в 1985 году и сегодня является одной из крупнейших гостиниц региона. \n\nГостиница представляет собой 9-этажное здание, расположенное в центре города Солигорска. Для людей с ограниченными возможностями есть пандус.   Номерной фонд гостиницы «Алеся» состоит из  68 уютных, хорошо оснащенных номеров.\n\nГостиница располагается в центре города, рядом с гостиницей находятся кинотеатр, Дворец культуры, банк, почта, магазины, городской парк, кафе и рестораны, водохранилище. Удобное расположение здания гостиницы Алеся позволяют быстро добраться  до ж\\д и авто вокзалов.",
+    "address": "ул. Ленина, 38, Солигорск",
+    "rating": "3.8",
+    "has_parking": false,
+    "has_wifi": true,
+    "latitude": "52.781976",
+    "longitude": "27.540782",
+    "owner": 1,
+    "city": 3
+  }
+},
+{
+  "model": "hotels.hotel",
+  "pk": 9,
+  "fields": {
+    "name": "Замковый",
+    "description": "Элегантный отель недалеко от Гомельского дворцово-паркового ансамбля. В 8 минутах ходьбы находится река Сож, а в 1 км — магистраль M10.\n\nОформленные в теплых тонах номера оснащены Wi-Fi, телевизорами со спутниковыми каналами и мини-холодильниками. Из некоторых номеров открывается вид на парк. В люксах есть зоны отдыха, а в изысканных улучшенных люксах – мини-кухни, камины, гидромассажные ванны и/или сауны. Предоставляется круглосуточное обслуживание номеров.\n\nК услугам гостей ресторан, бар, бильярдная и сауна. На территории отеля есть сад с местами для отдыха и фонтаном. Доступны парковка, завтрак по системе \"шведский стол\" и услуги массажа. Гости могут взять напрокат велосипед.",
+    "address": "улица Гагарина 6, Гомель",
+    "rating": "4.6",
+    "has_parking": true,
+    "has_wifi": true,
+    "latitude": "52.418810",
+    "longitude": "31.010710",
+    "owner": 1,
+    "city": 4
+  }
+},
+{
+  "model": "hotels.hotelimage",
+  "pk": 31,
+  "fields": {
+    "image_key": "hotels/78060d6044ff4396a168fe7f804cc703.jpeg",
+    "hotel": 6
+  }
+},
+{
+  "model": "hotels.hotelimage",
+  "pk": 32,
+  "fields": {
+    "image_key": "hotels/d547bad753b84257837142adab19dce9.jpeg",
+    "hotel": 6
+  }
+},
+{
+  "model": "hotels.hotelimage",
+  "pk": 33,
+  "fields": {
+    "image_key": "hotels/6f75bcbf9bb946218c2beb619ad7a6d5.jpeg",
+    "hotel": 4
+  }
+},
+{
+  "model": "hotels.hotelimage",
+  "pk": 34,
+  "fields": {
+    "image_key": "hotels/f390cc0e53f540959ce16b5ed157cd8c.jpeg",
+    "hotel": 4
+  }
+},
+{
+  "model": "hotels.hotelimage",
+  "pk": 35,
+  "fields": {
+    "image_key": "hotels/4d042df116e9402dbd8b571e4f3bb311.jpeg",
+    "hotel": 4
+  }
+},
+{
+  "model": "hotels.hotelimage",
+  "pk": 36,
+  "fields": {
+    "image_key": "hotels/9a41a6fba21f4e3288b11c0c6e0dff3c.jpg",
+    "hotel": 5
+  }
+},
+{
+  "model": "hotels.hotelimage",
+  "pk": 37,
+  "fields": {
+    "image_key": "hotels/0d610206a7f944f6ad1ec041bf8feda5.jpg",
+    "hotel": 5
+  }
+},
+{
+  "model": "hotels.hotelimage",
+  "pk": 38,
+  "fields": {
+    "image_key": "hotels/e7ab087aa68647febd4462c5bcfe03a5.jpg",
+    "hotel": 1
+  }
+},
+{
+  "model": "hotels.hotelimage",
+  "pk": 39,
+  "fields": {
+    "image_key": "hotels/13add5ab7e644619b0e6f56f1a4c872b.jpg",
+    "hotel": 1
+  }
+},
+{
+  "model": "hotels.hotelimage",
+  "pk": 40,
+  "fields": {
+    "image_key": "hotels/ab540a170b284435b6e0b94da9c88ede.jpg",
+    "hotel": 2
+  }
+},
+{
+  "model": "hotels.hotelimage",
+  "pk": 41,
+  "fields": {
+    "image_key": "hotels/b9602bd276ca445bb327df46990ea9bf.jpg",
+    "hotel": 8
+  }
+},
+{
+  "model": "hotels.hotelimage",
+  "pk": 42,
+  "fields": {
+    "image_key": "hotels/2c9302ed46c14e1e8273e9ffa96ef0e1.jpeg",
+    "hotel": 9
+  }
+},
+{
+  "model": "hotels.hotelimage",
+  "pk": 43,
+  "fields": {
+    "image_key": "hotels/50cc536b5af14f80b452442095e371cd.jpg",
+    "hotel": 9
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 1,
+  "fields": {
+    "name": "King Size",
+    "description": "Подарите себе отдых в номерах классса люкс, оформленных в стиле арт-деко. Площадь Президентского номера – 168 м2, Ambassador – 109 м2, Diplomat – 92 м2. Элегантная гостиная со стильной мебелью и большим LCD-телевизором, кофемашина и комфортабельная кровать размера King Size.",
+    "price": "150.00",
+    "beds_number": 3,
+    "rooms_number": 1,
+    "equipment_state": 3,
+    "has_washing_machine": true,
+    "has_kitchen": true,
+    "hotel": 1
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 2,
+  "fields": {
+    "name": "Bereza",
+    "description": "Представительские двухкомнатные апартаменты с чудесным панорамным видом на  город и его окрестности. Тёплые, светлые оттенки и классические интерьер создают тон для красивого отдыха. Номер включает в себя гостиную комнату с идеально устроенным рабочим пространством,  вместительной зоной отдыха и кухней, а так же изысканную спальню с двуспальной  кроватью. Имеются два отдельных полностью укомплектованных санузла.",
+    "price": "20.00",
+    "beds_number": 2,
+    "rooms_number": 1,
+    "equipment_state": 3,
+    "has_washing_machine": false,
+    "has_kitchen": true,
+    "hotel": 2
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 4,
+  "fields": {
+    "name": "Сингл",
+    "description": "Уютный классический однокомнатный номер для одноместного размещения.",
+    "price": "60.00",
+    "beds_number": 1,
+    "rooms_number": 1,
+    "equipment_state": 3,
+    "has_washing_machine": false,
+    "has_kitchen": false,
+    "hotel": 4
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 5,
+  "fields": {
+    "name": "Люкс",
+    "description": "Просторный двухместный номер, состоящий из спальни и гостиной",
+    "price": "100.00",
+    "beds_number": 1,
+    "rooms_number": 1,
+    "equipment_state": 3,
+    "has_washing_machine": false,
+    "has_kitchen": false,
+    "hotel": 4
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 6,
+  "fields": {
+    "name": "Твин",
+    "description": "Уютный двухместный однокомнатный номер с двумя раздельными кроватями. Ежедневная уборка, круглосуточная работа службы приема и размещения.",
+    "price": "40.00",
+    "beds_number": 2,
+    "rooms_number": 1,
+    "equipment_state": 3,
+    "has_washing_machine": false,
+    "has_kitchen": false,
+    "hotel": 5
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 7,
+  "fields": {
+    "name": "Семейный",
+    "description": "Просторный двухкомнатный (гостиная, спальня) номер с двумя кроватями и диваном в гостиной. Отлично подходит для семейного отдыха с детьми",
+    "price": "60.00",
+    "beds_number": 3,
+    "rooms_number": 2,
+    "equipment_state": 3,
+    "has_washing_machine": false,
+    "has_kitchen": true,
+    "hotel": 5
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 8,
+  "fields": {
+    "name": "Сингл",
+    "description": "Простой номер для одиноких(нет) айтишников",
+    "price": "30.00",
+    "beds_number": 1,
+    "rooms_number": 1,
+    "equipment_state": 3,
+    "has_washing_machine": false,
+    "has_kitchen": false,
+    "hotel": 6
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 9,
+  "fields": {
+    "name": "Люкс дабл",
+    "description": "Двухкомнатный номер 35 м2 с двумя отдельными комнатами, спальней и гостиной. Уютный номер, в каждой из комнат стоит отдельный TV и кондиционер. Номера оснащены мини-баром. Интерьер номера прекрасно сочетает деловой стиль и домашний уют, что располагает гостя к продуктивной работе и приятному отдыху",
+    "price": "65.00",
+    "beds_number": 3,
+    "rooms_number": 2,
+    "equipment_state": 3,
+    "has_washing_machine": false,
+    "has_kitchen": false,
+    "hotel": 9
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 10,
+  "fields": {
+    "name": "Люкс \"Свадебный\"",
+    "description": "Просторный номер, оформленный в классическом стиле,  в светлой цветовой гамме идеально подойдет для гостей ценящих комфорт, а также станет приятным подарком для молодоженов",
+    "price": "50.00",
+    "beds_number": 2,
+    "rooms_number": 2,
+    "equipment_state": 3,
+    "has_washing_machine": false,
+    "has_kitchen": false,
+    "hotel": 8
+  }
+},
+{
+  "model": "rooms.roomimage",
+  "pk": 5,
+  "fields": {
+    "image_key": "rooms/ed79a9a439434be9af28333c70e535fd.jpg",
+    "room": 4
+  }
+},
+{
+  "model": "rooms.roomimage",
+  "pk": 6,
+  "fields": {
+    "image_key": "rooms/da33d0dc35f94cde9a132018c7626384.jpg",
+    "room": 4
+  }
+},
+{
+  "model": "rooms.roomimage",
+  "pk": 9,
+  "fields": {
+    "image_key": "rooms/368178b61a7e48aba04093d9fd5150c5.jpg",
+    "room": 6
+  }
+},
+{
+  "model": "rooms.roomimage",
+  "pk": 10,
+  "fields": {
+    "image_key": "rooms/4942f6fec4e546b68f7453c0ef2be5bf.jpg",
+    "room": 6
+  }
+},
+{
+  "model": "rooms.roomimage",
+  "pk": 11,
+  "fields": {
+    "image_key": "rooms/0368990956024cacbb47afca1fa51393.jpg",
+    "room": 7
+  }
+},
+{
+  "model": "rooms.roomimage",
+  "pk": 12,
+  "fields": {
+    "image_key": "rooms/e15e48bf9e16417098df2f63f12f6ff2.jpg",
+    "room": 7
+  }
+},
+{
+  "model": "rooms.roomimage",
+  "pk": 16,
+  "fields": {
+    "image_key": "rooms/95063163f36348f1a69644d59bc5ab2a.jpg",
+    "room": 5
+  }
+},
+{
+  "model": "rooms.roomimage",
+  "pk": 17,
+  "fields": {
+    "image_key": "rooms/05c11e56f6c24cde9a0e00c0d86a59cd.jpg",
+    "room": 5
+  }
+},
+{
+  "model": "rooms.roomimage",
+  "pk": 18,
+  "fields": {
+    "image_key": "rooms/01dce3b3f23747cdb77db8cc597b0d1c.jpeg",
+    "room": 8
+  }
+},
+{
+  "model": "rooms.roomimage",
+  "pk": 19,
+  "fields": {
+    "image_key": "rooms/a4c54b567ae14f1dbfdb0dabd7789a9b.jpeg",
+    "room": 8
+  }
+},
+{
+  "model": "rooms.roomimage",
+  "pk": 20,
+  "fields": {
+    "image_key": "rooms/d9af25de262641c8979fdf49bd29ad5b.jpg",
+    "room": 9
+  }
+},
+{
+  "model": "rooms.roomimage",
+  "pk": 21,
+  "fields": {
+    "image_key": "rooms/a938fb8604f64298aea1a27dd671ad2f.jpg",
+    "room": 9
+  }
+},
+{
+  "model": "rooms.roomimage",
+  "pk": 22,
+  "fields": {
+    "image_key": "rooms/ad3aa97dd54f4a04afa4f18c8a682107.jpg",
+    "room": 10
+  }
+},
+{
+  "model": "rooms.roomimage",
+  "pk": 23,
+  "fields": {
+    "image_key": "rooms/08200635d95c49249bcc42be108ba9bc.jpg",
+    "room": 10
+  }
+},
+{
+  "model": "cities.city",
+  "pk": 1,
+  "fields": {
+    "name": "Минск"
+  }
+},
+{
+  "model": "cities.city",
+  "pk": 2,
+  "fields": {
+    "name": "Брест"
+  }
+},
+{
+  "model": "cities.city",
+  "pk": 3,
+  "fields": {
+    "name": "Солигорск"
+  }
+},
+{
+  "model": "cities.city",
+  "pk": 4,
+  "fields": {
+    "name": "Гомель"
+  }
+},
+{
+  "model": "booking.booking",
+  "pk": 1,
+  "fields": {
+    "start_date": "2022-11-25",
+    "end_date": "2022-11-27",
+    "user": 1,
+    "room": 6
+  }
+},
+{
+  "model": "booking.booking",
+  "pk": 2,
+  "fields": {
+    "start_date": "2022-11-30",
+    "end_date": "2022-12-01",
+    "user": 1,
+    "room": 1
+  }
+},
+{
+  "model": "booking.booking",
+  "pk": 3,
+  "fields": {
+    "start_date": "2022-12-04",
+    "end_date": "2022-12-05",
+    "user": 1,
+    "room": 1
+  }
+},
+{
+  "model": "booking.booking",
+  "pk": 4,
+  "fields": {
+    "start_date": "2022-11-26",
+    "end_date": "2022-11-28",
+    "user": 1,
+    "room": 10
+  }
+}
+]
