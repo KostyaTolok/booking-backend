@@ -8,7 +8,7 @@ from common.utils import path_and_rename
 
 class Room(models.Model):
     name = models.CharField(verbose_name="Room name", max_length=50, blank=False)
-    description = models.CharField(verbose_name="Room description", max_length=200, blank=True, null=True)
+    description = models.TextField(verbose_name="Room description", max_length=1000, blank=True, null=True)
     price = models.DecimalField(verbose_name="Room price", max_digits=6, decimal_places=2)
     beds_number = models.PositiveIntegerField(verbose_name="Room beds number")
     rooms_number = models.PositiveIntegerField(verbose_name="Rooms number")
