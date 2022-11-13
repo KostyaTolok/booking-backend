@@ -14,7 +14,9 @@ class UserService:
         )
 
         if not user:
-            raise exceptions.BadRequestException(message="Incorrect email or password")
+            raise exceptions.BadRequestException(
+                message="Incorrect email or password",
+            )
 
         return user
 
@@ -26,7 +28,9 @@ class UserService:
     async def create_user(db, *, obj_in: Union[UserCreate, Dict[str, Any]]) -> User:
         user = crud.user.get_by_email(db, email=obj_in.email)
         if user:
-            raise exceptions.BadRequestException(message="The user with this username already exists in the system")
+            raise exceptions.BadRequestException(
+                message="The user with this username already exists in the system",
+            )
 
         user = crud.user.create(db, obj_in=obj_in)
 
@@ -56,7 +60,18 @@ class UserService:
 
     @staticmethod
     def update_user(db, *, db_obj: User, obj_in: Union[UserUpdate, Dict[str, Any]]) -> User:
-        return crud.user.update(db, db_obj=db_obj, obj_in=obj_in)
+        updated_fields = obj_in.dict(exclude_unset=True)
+
+        if obj_in.email and db_obj.email != obj_in.email:
+            user = crud.user.get_by_email(db, email=obj_in.email)
+            if user:
+                raise exceptions.BadRequestException(
+                    message="The user with this username already exist in the system",
+                )
+
+            updated_fields["is_active"] = False
+
+        return crud.user.update(db, db_obj=db_obj, obj_in=updated_fields)
 
     @staticmethod
     def delete_user(db, user_id: int) -> User:

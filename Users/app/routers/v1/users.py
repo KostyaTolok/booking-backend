@@ -35,11 +35,8 @@ def update_user_me(
         *,
         db: Session = Depends(dependencies.get_db),
         user_in: schemas.UserUpdate,
-        current_user: models.User = Depends(dependencies.get_current_active_user),
+        current_user: models.User = Depends(dependencies.get_current_user),
 ):
-    if user_in.email and current_user.email != user_in.email:
-        user_in.is_active = False
-
     return UserService.update_user(db, db_obj=current_user, obj_in=user_in)
 
 
@@ -47,14 +44,14 @@ def update_user_me(
 def delete_user_me(
         *,
         db: Session = Depends(dependencies.get_db),
-        current_user: models.User = Depends(dependencies.get_current_active_user),
+        current_user: models.User = Depends(dependencies.get_current_user),
 ):
     return UserService.delete_user(db, current_user.id)
 
 
 @router.get("/me", response_model=schemas.User)
 def read_user_me(
-        current_user: models.User = Depends(dependencies.get_current_active_user),
+        current_user: models.User = Depends(dependencies.get_current_user),
 ):
     return current_user
 
