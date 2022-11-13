@@ -30,7 +30,7 @@ class UserInDBBase(UserBase):
 
 # Additional properties to return via API
 class User(UserInDBBase):
-    pass
+    is_active: bool
 
 
 # Additional properties stored in DB
