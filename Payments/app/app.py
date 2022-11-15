@@ -16,32 +16,15 @@ from app.core.amqp_connection import SingletonAmqp
 app = FastAPI(root_path=config.ROOT_PATH)
 
 
-@app.on_event("startup")
-@retry(attempts=5, delay=5)
-async def startup():
-    SingletonAiohttp.get_aiohttp_client()
-    await SingletonAmqp.get_amqp_connection()
-    await remove_expired_payment_intents()
-
-
-@app.on_event("shutdown")
-async def shutdown():
-    await SingletonAiohttp.close_aiohttp_client()
-    await SingletonAmqp.close_amqp_connection()
-
-
-app.include_router(router, prefix=config.API_PREFIX)
-
-
 @retry(attempts=5, delay=3)
-def run_migrations():
+async def run_migrations():
     alembic_cfg = Config("alembic.ini")
     alembic_cfg.set_main_option("sqlalchemy.url", config.DB_URL)
     command.upgrade(alembic_cfg, "head")
 
 
 @retry(attempts=5, delay=5)
-def logging_setup():
+async def logging_setup():
     kafka_handler_obj = KafkaLoggingHandler(
         config.KAFKA_URL,
         config.KAFKA_LOGGING_TOPIC_NAME,
@@ -52,8 +35,42 @@ def logging_setup():
     logger.setLevel(logging.INFO)
 
 
-# TODO run_migrations() broke logs
-run_migrations()
+@retry(attempts=5, delay=3)
+async def create_connections():
+    SingletonAiohttp.get_aiohttp_client()
+    await SingletonAmqp.get_amqp_connection()
 
-if config.KAFKA_LOGGING:
-    logging_setup()
+
+async def close_connections():
+    await SingletonAiohttp.close_aiohttp_client()
+    await SingletonAmqp.close_amqp_connection()
+
+
+@app.on_event("startup")
+async def startup():
+    if config.BACKEND_CORS_ORIGINS:
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origins=[str(origin) for origin in config.BACKEND_CORS_ORIGINS],
+            allow_credentials=True,
+            allow_methods=["*"],
+            allow_headers=["*"],
+        )
+
+    await create_connections()
+
+    await remove_expired_payment_intents()
+
+    # TODO run_migrations() broke logs
+    await run_migrations()
+
+    if config.KAFKA_LOGGING:
+        await logging_setup()
+
+
+@app.on_event("shutdown")
+async def shutdown():
+    close_connections()
+
+
+app.include_router(router, prefix=config.API_PREFIX)

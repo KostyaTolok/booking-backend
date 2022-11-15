@@ -1,7 +1,7 @@
 import os
-from typing import Optional, Dict, Any, Union
+from typing import Optional, Dict, Any, Union, List
 
-from pydantic import BaseSettings, validator
+from pydantic import BaseSettings, AnyHttpUrl, validator
 from pydantic.networks import PostgresDsn, AmqpDsn, KafkaDsn
 
 
@@ -13,6 +13,8 @@ class Config(BaseSettings):
     API_CURRENT_VERSION: str = "v1"
     APP_HOST: str = "0.0.0.0"
     APP_PORT: int = 8080
+
+    BACKEND_CORS_ORIGINS: List[AnyHttpUrl] = []
 
     SEARCH_SERVICE_API_URL: str
 

@@ -21,24 +21,31 @@ async def custom_exception_handler(request: Request, exc: CustomException):
     )
 
 
-if config.BACKEND_CORS_ORIGINS:
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=[str(origin) for origin in config.BACKEND_CORS_ORIGINS],
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
-
-
 @retry(attempts=5, delay=3)
-def run_migrations():
+async def run_migrations():
     alembic_cfg = Config('alembic.ini')
     alembic_cfg.set_main_option('sqlalchemy.url', config.DB_URL)
     command.upgrade(alembic_cfg, 'head')
 
 
-# TODO run_migrations() broke logs
-run_migrations()
+@app.on_event("startup")
+async def startup():
+    if config.BACKEND_CORS_ORIGINS:
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origins=[str(origin) for origin in config.BACKEND_CORS_ORIGINS],
+            allow_credentials=True,
+            allow_methods=["*"],
+            allow_headers=["*"],
+        )
+
+    # TODO run_migrations() broke logs
+    await run_migrations()
+
+
+@app.on_event("shutdown")
+async def shutdown():
+    ...
+
 
 app.include_router(api_router, prefix=config.API_PREFIX)

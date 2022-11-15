@@ -19,7 +19,7 @@ class ApartmentServices:
     ) -> schemas.Apartment:
         try:
             async with client.get(
-                urljoin(config.SEARCH_SERVICE_API_URL, f"rooms/{apartment_id}")
+                urljoin(config.SEARCH_SERVICE_API_URL, f"rooms/{apartment_id}" + "/")
             ) as response:
                 if response.status == status.HTTP_404_NOT_FOUND:
                     raise HTTPException(
@@ -28,7 +28,7 @@ class ApartmentServices:
                     )
                 if not response.ok:
                     logging.error(
-                        f"Apartment {apartment_id} fetching failed. {response.json()}."
+                        f"Apartment {apartment_id} fetching failed. {response.json()}. {response.url}"
                     )
                     raise HTTPException(
                         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
