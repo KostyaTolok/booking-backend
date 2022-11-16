@@ -13,6 +13,7 @@ class Config(BaseSettings):
     API_CURRENT_VERSION: str = "v1"
     APP_HOST: str = "0.0.0.0"
     APP_PORT: int = 8001
+    HOST: str
 
     SECRET_KEY: str
     TOKEN_BLACKLIST: bool = True
