@@ -19,7 +19,10 @@ def send_email(
         "Destination": {"ToAddresses": recipients},
         "Message": {
             "Subject": {"Data": subject},
-            "Body": {"Text": {"Data": text}, "Html": {"Data": html}},
+            "Body": {
+                "Text": {"Data": text},
+                "Html": {"Data": html},
+            },
         },
     }
     ses.send_email(**message)
