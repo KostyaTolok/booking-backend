@@ -25,6 +25,7 @@ class Payment(BaseModel):
 
 class PaymentCreate(Payment):
     payment_intent_id: str
+    client_secret: str
     customer_id: str
     user_id: int
     apartment_id: int

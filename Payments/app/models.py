@@ -14,6 +14,7 @@ class BookingPayment(Base):
     succeeded = Column(Boolean, nullable=False, default=False)
 
     payment_intent_id = Column(String, nullable=False, index=True)
+    client_secret = Column(String, nullable=False, index=True)
     customer_id = Column(String, nullable=False)
 
     user_id = Column(Integer, nullable=False)

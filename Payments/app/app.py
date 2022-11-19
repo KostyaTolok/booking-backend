@@ -70,7 +70,7 @@ async def startup():
 
 @app.on_event("shutdown")
 async def shutdown():
-    close_connections()
+    await close_connections()
 
 
 app.include_router(router, prefix=config.API_PREFIX)

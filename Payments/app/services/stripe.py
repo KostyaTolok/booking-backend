@@ -28,7 +28,7 @@ class StripeService:
     ):
         return await stripe.PaymentIntent.create(
             amount=int(price * 100),
-            currency="eur",
+            currency="usd",
             customer=customer_id,
             receipt_email=customer_email,
             automatic_payment_methods={
@@ -52,6 +52,7 @@ class StripeService:
         )
         return schemas.PaymentSheet(
             payment_intent_id=payment_intent.id,
+            client_secret=payment_intent.client_secret,
             ephemeral_key=ephemeral_key.secret,
             customer_id=customer.id,
             publishable_key=config.STRIPE_PUBLISHABLE_KEY,
