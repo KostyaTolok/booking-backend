@@ -13,6 +13,7 @@ class Config(BaseSettings):
     API_CURRENT_VERSION: str = "v1"
     APP_HOST: str = "0.0.0.0"
     APP_PORT: int = 8001
+    HOST: str
 
     SECRET_KEY: str
     TOKEN_BLACKLIST: bool = True
@@ -31,6 +32,8 @@ class Config(BaseSettings):
     POSTGRES_HOST: str
     POSTGRES_PORT: str
     DB_URL: PostgresDsn = None
+
+    TEMPLATES_PATH: str
 
     @validator("DB_URL")
     def assemble_db_connection(cls, v: Optional[str], values: Dict[str, Any]) -> Any:
