@@ -1,5 +1,6 @@
 import json
 from aio_pika import Message, connect
+from jinja2 import Environment, FileSystemLoader
 
 from app.core.config import config
 
@@ -24,6 +25,11 @@ async def send_email(*, email: str, subject: str, html: str = None, text: str = 
 
         # TODO add exchanger && create amqp abstraction ?
         await channel.default_exchange.publish(
-            Message(json.dumps(message).encode('utf-8')),
+            Message(json.dumps(message).encode("utf-8")),
             routing_key=queue.name,
         )
+
+
+def render_template(template_name, **kwargs):
+    environment = Environment(loader=FileSystemLoader(config.TEMPLATES_PATH))
+    return environment.get_template(template_name).render(**kwargs)

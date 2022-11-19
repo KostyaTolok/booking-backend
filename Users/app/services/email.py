@@ -1,4 +1,4 @@
-from app.core.utils.email import send_email
+from app.core.utils.email import send_email, render_template
 from app.core.config import config
 
 
@@ -6,12 +6,9 @@ async def send_reset_password_email(email: str, token: str) -> None:
     message = {
         "email": email,
         "subject": "PandaHouse password reset",
-        "html": f"""
-        <p>
-            Hi! We heard that you lost your PandaHouse password. Sorry about that!
-        </p>
-        <a href="https://{config.HOST}/booking-mobile/reset-password/confirm/{token}">Reset Your Password</a>
-        """,
+        "html": render_template(
+            "reset-password-email.html", host=config.HOST, token=token
+        ),
     }
     await send_email(**message)
 

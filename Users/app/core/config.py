@@ -33,6 +33,8 @@ class Config(BaseSettings):
     POSTGRES_PORT: str
     DB_URL: PostgresDsn = None
 
+    TEMPLATES_PATH: str
+
     @validator("DB_URL")
     def assemble_db_connection(cls, v: Optional[str], values: Dict[str, Any]) -> Any:
         if isinstance(v, str):
