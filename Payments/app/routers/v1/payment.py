@@ -13,7 +13,7 @@ from app.services.stripe import StripeService
 router = APIRouter(tags=["payment"])
 
 
-@router.post("/payment-sheet", response_model=schemas.PaymentSheet)
+@router.post("/payment-sheet", response_model=schemas.PaymentSheetOut)
 async def payment_sheet(
     db: Session = Depends(get_db),
     client: ClientSession = Depends(get_http_client),
@@ -46,6 +46,7 @@ async def payment_sheet(
 
     payment = schemas.PaymentCreate(
         payment_intent_id=payment_sheet.payment_intent_id,
+        client_secret=payment_sheet.client_secret,
         customer_id=payment_sheet.customer_id,
         user_id=token_payload.sub,
         apartment_id=payload.apartment_id,
@@ -57,18 +58,6 @@ async def payment_sheet(
 
     message = {
         **payment_sheet.dict(),
-        "user_id": token_payload.sub,
-        "apartment_id": payload.apartment_id,
-        "start_date": payload.start_date,
-        "end_date": payload.end_date,
-        "price": total_price,
-    }
-    logging.info(f"Payment intent created. {message}.")
-
-    return payment_sheet
-
-    message = {
-        **payment_sheet,
         "user_id": token_payload.sub,
         "apartment_id": payload.apartment_id,
         "start_date": payload.start_date,
