@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from app import crud
+from app import crud, schemas
 from app.core.config import config
 from app.core import exceptions
 from app.core.utils.security import confirmation_code
@@ -27,8 +27,11 @@ class ConfirmService:
         token.blacklist()
 
         user = UserService.get_user(db, id=token["sub"])
+        user_in = schemas.UserUpdate(password=new_password)
         return UserService.update_user(
-            db, db_obj=user, obj_in={"password": new_password}
+            db,
+            db_obj=user,
+            obj_in=user_in,
         )
 
     @staticmethod

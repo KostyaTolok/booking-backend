@@ -1,4 +1,4 @@
-from typing import Union, Dict, Any, List
+from typing import List
 
 from app import crud
 from app.core import exceptions
@@ -25,7 +25,7 @@ class UserService:
         return crud.user.get_multi(db, skip=skip, limit=limit)
 
     @staticmethod
-    async def create_user(db, *, obj_in: Union[UserCreate, Dict[str, Any]]) -> User:
+    async def create_user(db, *, obj_in: UserCreate) -> User:
         user = crud.user.get_by_email(db, email=obj_in.email)
         if user:
             raise exceptions.BadRequestException(
@@ -59,7 +59,7 @@ class UserService:
         return user
 
     @staticmethod
-    def update_user(db, *, db_obj: User, obj_in: Union[UserUpdate, Dict[str, Any]]) -> User:
+    def update_user(db, *, db_obj: User, obj_in: UserUpdate) -> User:
         updated_fields = obj_in.dict(exclude_unset=True)
 
         if obj_in.email and db_obj.email != obj_in.email:
