@@ -28,7 +28,12 @@ services:
     expose:
       - "5672"
       - "15672"
-
+  redis:
+    image: redis
+    expose:
+      - "6379"
+    networks:
+      - redis
 
 networks:
   web:
@@ -37,3 +42,6 @@ networks:
   rabbitmq:
     driver: bridge
     name: shared-rabbitmq
+  redis:
+    driver: bridge
+    name: shared-redis
