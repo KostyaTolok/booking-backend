@@ -37,7 +37,7 @@ class StripeService:
         )
 
     @staticmethod
-    async def crete_payment_sheet(
+    async def create_payment_sheet(
         user_id: int,
         customer_email: str,
         price: Decimal,

@@ -38,7 +38,7 @@ async def payment_sheet(
         end_date=payload.end_date,
     )
 
-    payment_sheet = await StripeService.crete_payment_sheet(
+    payment_sheet = await StripeService.create_payment_sheet(
         user_id=token_payload.sub,
         customer_email=token_payload.email,
         price=total_price,
