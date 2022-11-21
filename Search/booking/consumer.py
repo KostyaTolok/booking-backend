@@ -19,9 +19,6 @@ class Consumer(threading.Thread):
             self.settings.BOOKING_QUEUE_NAME,
             durable=True,
         )
-        channel.exchange_declare(
-            exchange=self.settings.BOOKING_EXCHANGE_NAME, exchange_type="fanout"
-        )
         channel.queue_bind(
             exchange=self.settings.BOOKING_EXCHANGE_NAME,
             queue=self.settings.BOOKING_QUEUE_NAME,

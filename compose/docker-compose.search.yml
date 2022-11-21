@@ -21,6 +21,8 @@ services:
         condition: "service_started"
       rabbitmq:
         condition: "service_healthy"
+      payments:
+        condition: "service_started"
   search_db:
     image: postgres:12.0-alpine
     container_name: search_db

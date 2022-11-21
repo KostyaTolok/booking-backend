@@ -38,7 +38,7 @@ async def logging_setup():
 @retry(attempts=5, delay=3)
 async def create_connections():
     SingletonAiohttp.get_aiohttp_client()
-    await SingletonAmqp.get_amqp_connection()
+    await SingletonAmqp.get_payments_exchange()
 
 
 async def close_connections():
