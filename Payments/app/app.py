@@ -5,13 +5,14 @@ from alembic.config import Config
 from alembic import command
 from retrying_async import retry
 from kafka_logger.handlers import KafkaLoggingHandler
+from starlette.middleware.cors import CORSMiddleware
 
 from app.core.config import config
 from app.routers import router
 from app.tasks import remove_expired_payment_intents
 from app.core.http_session import SingletonAiohttp
 from app.core.amqp_connection import SingletonAmqp
-
+from app.events import create_payments_exchange
 
 app = FastAPI(root_path=config.ROOT_PATH)
 
@@ -39,6 +40,7 @@ async def logging_setup():
 async def create_connections():
     SingletonAiohttp.get_aiohttp_client()
     await SingletonAmqp.get_amqp_connection()
+    await create_payments_exchange()
 
 
 async def close_connections():

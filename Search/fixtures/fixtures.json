@@ -352,6 +352,30 @@
 },
 {
   "model": "rooms.roomimage",
+  "pk": 1,
+  "fields": {
+    "image_key": "rooms/6ec235c6a6bd119267f6d3d4baf09bd1.jpg",
+    "room": 1
+  }
+},
+{
+  "model": "rooms.roomimage",
+  "pk": 2,
+  "fields": {
+    "image_key": "rooms/31d9b533c86b45588303d008def0c714.jpg",
+    "room": 1
+  }
+},
+{
+  "model": "rooms.roomimage",
+  "pk": 3,
+  "fields": {
+    "image_key": "rooms/656a8c3a3ddc41b7aa98d0a205a9227b.jpg",
+    "room": 2
+  }
+},
+{
+  "model": "rooms.roomimage",
   "pk": 5,
   "fields": {
     "image_key": "rooms/ed79a9a439434be9af28333c70e535fd.jpg",
@@ -488,46 +512,6 @@
   "pk": 4,
   "fields": {
     "name": "Гомель"
-  }
-},
-{
-  "model": "booking.booking",
-  "pk": 1,
-  "fields": {
-    "start_date": "2022-11-25",
-    "end_date": "2022-11-27",
-    "user": 1,
-    "room": 6
-  }
-},
-{
-  "model": "booking.booking",
-  "pk": 2,
-  "fields": {
-    "start_date": "2022-11-30",
-    "end_date": "2022-12-01",
-    "user": 1,
-    "room": 1
-  }
-},
-{
-  "model": "booking.booking",
-  "pk": 3,
-  "fields": {
-    "start_date": "2022-12-04",
-    "end_date": "2022-12-05",
-    "user": 1,
-    "room": 1
-  }
-},
-{
-  "model": "booking.booking",
-  "pk": 4,
-  "fields": {
-    "start_date": "2022-11-26",
-    "end_date": "2022-11-28",
-    "user": 1,
-    "room": 10
   }
 }
 ]

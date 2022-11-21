@@ -8,12 +8,9 @@ from app.core.config import config
 
 async def send_payment_event(message: dict):
     connection = await SingletonAmqp.get_amqp_connection()
-
     channel = await connection.channel()
-
-    exchange = await channel.declare_exchange(
-        config.RABBITMQ_PAYMENT_EVENTS_EXCHANGE_NAME,
-        ExchangeType.FANOUT,
+    exchange = await channel.get_exchange(
+        config.RABBITMQ_PAYMENT_EVENTS_EXCHANGE_NAME, ensure=True
     )
 
     message = Message(
@@ -22,3 +19,12 @@ async def send_payment_event(message: dict):
     )
 
     await exchange.publish(message, routing_key="payment")
+
+
+async def create_payments_exchange():
+    connection = await SingletonAmqp.get_amqp_connection()
+    channel = await connection.channel()
+    await channel.declare_exchange(
+        config.RABBITMQ_PAYMENT_EVENTS_EXCHANGE_NAME,
+        ExchangeType.FANOUT,
+    )
