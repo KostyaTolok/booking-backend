@@ -1,8 +1,8 @@
+from django.db.models import Min
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action
-from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
@@ -43,7 +43,7 @@ class HotelsViewSet(
         'get_recently_viewed': (IsAuthenticated,),
         'default': (IsAuthenticated,),
     }
-    queryset = Hotel.objects.all()
+    queryset = Hotel.objects.annotate(min_price=Min("rooms__price"))
     filter_backends = (DjangoFilterBackend,)
     filterset_class = HotelFilter
 
