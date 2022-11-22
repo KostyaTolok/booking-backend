@@ -10,9 +10,11 @@ ALGORITHM = "HS256"
 
 
 def get_hash_base32(subject: str):
-    dig = hmac.new(config.SECRET_KEY.encode("UTF-8"),
-                   msg=subject.encode("UTF-8"),
-                   digestmod=hashlib.sha256).digest()
+    dig = hmac.new(
+        config.SECRET_KEY.encode("UTF-8"),
+        msg=subject.encode("UTF-8"),
+        digestmod=hashlib.sha256,
+    ).digest()
     secret = base64.b32encode(dig).decode()
     return secret
 

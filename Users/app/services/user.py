@@ -9,9 +9,7 @@ from app.schemas import UserUpdate, UserCreate
 class UserService:
     @staticmethod
     def authenticate(db, *, username: str, password: str) -> User:
-        user = crud.user.authenticate(
-            db, email=username, password=password
-        )
+        user = crud.user.authenticate(db, email=username, password=password)
 
         if not user:
             raise exceptions.BadRequestException(

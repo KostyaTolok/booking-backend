@@ -11,7 +11,12 @@ from common.permissions import IsAdmin, IsAuthenticated
 from hotels.filters import HotelFilter
 from hotels.models import Hotel, HotelImage, HotelView
 from hotels.permissions import IsHotelOwner
-from hotels.serializers import HotelSerializer, HotelListSerializer, HotelImageSerializer, HotelViewSerializer
+from hotels.serializers import (
+    HotelSerializer,
+    HotelListSerializer,
+    HotelImageSerializer,
+    HotelViewSerializer,
+)
 from hotels.services import add_hotel_image
 from search_requests.models import SearchRequest
 from search_requests.serializers import SearchRequestSerializer
@@ -27,21 +32,21 @@ class HotelsViewSet(
     viewsets.GenericViewSet,
 ):
     serializer_classes = {
-        'list': HotelListSerializer,
-        'retrieve': HotelSerializer,
-        'create': HotelSerializer,
-        'update': HotelSerializer,
-        'destroy': HotelSerializer,
-        'default': HotelSerializer,
+        "list": HotelListSerializer,
+        "retrieve": HotelSerializer,
+        "create": HotelSerializer,
+        "update": HotelSerializer,
+        "destroy": HotelSerializer,
+        "default": HotelSerializer,
     }
     permission_classes = {
-        'list': (AllowAny,),
-        'retrieve': (AllowAny,),
-        'create': (IsAdmin,),
-        'update': (IsAdmin | IsHotelOwner,),
-        'destroy': (IsAdmin | IsHotelOwner,),
-        'get_recently_viewed': (IsAuthenticated,),
-        'default': (IsAuthenticated,),
+        "list": (AllowAny,),
+        "retrieve": (AllowAny,),
+        "create": (IsAdmin,),
+        "update": (IsAdmin | IsHotelOwner,),
+        "destroy": (IsAdmin | IsHotelOwner,),
+        "get_recently_viewed": (IsAuthenticated,),
+        "default": (IsAuthenticated,),
     }
     queryset = Hotel.objects.annotate(min_price=Min("rooms__price"))
     filter_backends = (DjangoFilterBackend,)

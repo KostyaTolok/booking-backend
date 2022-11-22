@@ -12,11 +12,16 @@ class RoomImageSerializer(serializers.ModelSerializer):
 
 class RoomSerializer(serializers.ModelSerializer):
     image_files = serializers.ListField(
-        child=serializers.ImageField(use_url=True), required=False, allow_empty=True, write_only=True
+        child=serializers.ImageField(use_url=True),
+        required=False,
+        allow_empty=True,
+        write_only=True,
     )
     images = RoomImageSerializer(many=True, read_only=True)
 
-    price = serializers.DecimalField(min_value=0, max_value=1000, max_digits=6, decimal_places=2)
+    price = serializers.DecimalField(
+        min_value=0, max_value=1000, max_digits=6, decimal_places=2
+    )
     beds_number = serializers.IntegerField(min_value=0, max_value=10)
 
     class Meta:
@@ -39,7 +44,9 @@ class RoomSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         image_files = validated_data.pop("image_files", [])
         room = Room.objects.create(**validated_data)
-        RoomImage.objects.bulk_create((RoomImage(image_key=image_file, room=room) for image_file in image_files))
+        RoomImage.objects.bulk_create(
+            (RoomImage(image_key=image_file, room=room) for image_file in image_files)
+        )
         return room
 
 

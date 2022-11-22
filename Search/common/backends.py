@@ -22,7 +22,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
 
     def decode_token(self, jwt_token):
         try:
-            return jwt.decode(jwt_token, settings.JWT_SECRET_KEY, algorithms=['HS256'])
+            return jwt.decode(jwt_token, settings.JWT_SECRET_KEY, algorithms=["HS256"])
         except jwt.ExpiredSignatureError:
             raise AuthenticationFailed("Authentication token has expired")
         except (jwt.DecodeError, jwt.InvalidTokenError):

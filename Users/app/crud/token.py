@@ -13,10 +13,12 @@ class CRUDToken(CRUDBase[Token, TokenCreate, TokenCreate]):
         return db.query(Token).filter(Token.jti == jti).first()
 
     def get_last_by_user_id(self, db: Session, *, user_id: int) -> Optional[Token]:
-        return (db.query(Token)
-                .filter(Token.user_id == user_id)
-                .order_by(desc(Token.id))
-                .first())
+        return (
+            db.query(Token)
+            .filter(Token.user_id == user_id)
+            .order_by(desc(Token.id))
+            .first()
+        )
 
 
 token = CRUDToken(Token)

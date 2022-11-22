@@ -14,5 +14,5 @@ class RoomFilter(django_filters.FilterSet):
     equipment_state = filters.ChoiceFilter(choices=EquipmentStates.choices)
     hotel = filters.NumberFilter()
     order = filters.OrderingFilter(
-        fields=(('price', 'price'),),
+        fields=(("price", "price"),),
     )

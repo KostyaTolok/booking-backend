@@ -23,9 +23,9 @@ async def custom_exception_handler(request: Request, exc: CustomException):
 
 @retry(attempts=5, delay=3)
 async def run_migrations():
-    alembic_cfg = Config('alembic.ini')
-    alembic_cfg.set_main_option('sqlalchemy.url', config.DB_URL)
-    command.upgrade(alembic_cfg, 'head')
+    alembic_cfg = Config("alembic.ini")
+    alembic_cfg.set_main_option("sqlalchemy.url", config.DB_URL)
+    command.upgrade(alembic_cfg, "head")
 
 
 @app.on_event("startup")

@@ -11,5 +11,7 @@ class SearchRequestSerializer(serializers.DocumentSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation = OrderedDict([(key, value) for key, value in representation.items() if value is not None])
+        representation = OrderedDict(
+            [(key, value) for key, value in representation.items() if value is not None]
+        )
         return representation

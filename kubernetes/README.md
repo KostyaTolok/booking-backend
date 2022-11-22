@@ -3,7 +3,7 @@
 ### 1. Install Kubectl
 https://kubernetes.io/ru/docs/tasks/tools/install-kubectl/
 
-### 2. Install Minikube for creat cluster locally 
+### 2. Install Minikube for creat cluster locally
 https://kubernetes.io/ru/docs/tasks/tools/install-minikube/
 
 ### 3. Start Minikube
