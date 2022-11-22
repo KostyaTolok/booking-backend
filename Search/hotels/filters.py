@@ -1,6 +1,6 @@
 import django_filters
 from django_filters import rest_framework as filters
-from django.db.models import Q
+from django.db.models import Q, Min
 
 
 class HotelFilter(django_filters.FilterSet):
@@ -10,7 +10,7 @@ class HotelFilter(django_filters.FilterSet):
     has_wifi = filters.BooleanFilter()
     has_washing_machine = filters.BooleanFilter(field_name="rooms__has_washing_machine", distinct=True)
     has_kitchen = filters.BooleanFilter(field_name="rooms__has_kitchen", distinct=True)
-    price = filters.RangeFilter(field_name="rooms__price", distinct=True)
+    price = filters.RangeFilter(method="filter_price_range", distinct=True)
     owner = filters.NumberFilter()
     city = filters.NumberFilter()
     beds_number = filters.NumberFilter(field_name="rooms__beds_number", lookup_expr="gte", distinct=True)
@@ -21,10 +21,15 @@ class HotelFilter(django_filters.FilterSet):
     order = filters.OrderingFilter(
         fields=(
             ('rating', 'rating'),
-            ('rooms__price', "price"),
+            ('min_price', 'min_price'),
         ),
         distinct=True,
     )
+
+    def filter_price_range(self, queryset, name, value):
+        return queryset.filter(rooms__price__gte=value.start, rooms__price__lte=value.stop).annotate(
+            min_price=Min("rooms__price")
+        )
 
     def filter_start_date(self, queryset, name, value):
         return queryset.filter(

@@ -51,17 +51,13 @@ class HotelSerializer(serializers.ModelSerializer):
 
 
 class HotelListSerializer(serializers.ModelSerializer):
-    min_price = serializers.SerializerMethodField(allow_null=True)
+    min_price = serializers.DecimalField(allow_null=True, read_only=True, max_digits=6, decimal_places=2)
     first_image = serializers.SerializerMethodField(allow_null=True)
     city_name = serializers.CharField(source="city.name")
 
     class Meta:
         model = Hotel
         fields = ("id", "name", "first_image", "description", "rating", "min_price", "city_name")
-
-    def get_min_price(self, obj):
-        query = obj.rooms.all().values_list('price', flat=True).aggregate(Min('price'))
-        return query.get('price__min')
 
     def get_first_image(self, obj):
         image = obj.images.first()
