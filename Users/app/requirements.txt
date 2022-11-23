@@ -11,9 +11,9 @@ passlib==1.7.4
 psycopg2-binary==2.9.3
 pydantic==1.10.2
 PyJWT==2.5.0
-pyotp==2.7.0
 python-dotenv==0.21.0
 python-multipart==0.0.5
 retrying-async==2.0.0
 SQLAlchemy==1.4.41
 uvicorn==0.18.3
+aioredis[hiredis]==2.0.1
