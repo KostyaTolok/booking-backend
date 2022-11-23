@@ -10,6 +10,7 @@ services:
       - users
       - web
       - rabbitmq
+      - redis
     expose:
       - "8000"
     volumes:
@@ -19,6 +20,8 @@ services:
         condition: "service_started"
       rabbitmq:
         condition: "service_healthy"
+      redis:
+        condition: "service_started"
   users_db:
     image: postgres:12.0-alpine
     container_name: users_db
@@ -43,5 +46,8 @@ networks:
   rabbitmq:
     external: true
     name: shared-rabbitmq
+  redis:
+    external: true
+    name: shared-redis
   users:
     driver: bridge

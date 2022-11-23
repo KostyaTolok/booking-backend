@@ -39,7 +39,7 @@ class ConfirmService:
         if user.is_active:
             raise exceptions.BadRequestException(message="Email is already confirmed")
 
-        code = confirmation_code.get_code(subject=user.email)
+        code = await confirmation_code.get_code(subject=user.email)
         await send_confirm_email(email=user.email, code=code)
 
     @staticmethod
@@ -47,7 +47,7 @@ class ConfirmService:
         if user.is_active:
             raise exceptions.BadRequestException(message="Email is already confirmed")
 
-        if not confirmation_code.verify_code(subject=user.email, code=code):
+        if not await confirmation_code.verify_code(subject=user.email, code=code):
             raise exceptions.ForbiddenException(
                 message="Confirm code is invalid or expired"
             )

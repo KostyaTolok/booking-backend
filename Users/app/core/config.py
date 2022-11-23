@@ -2,7 +2,7 @@ import os
 from typing import List, Optional, Dict, Any
 
 from pydantic import BaseSettings, AnyHttpUrl, validator
-from pydantic.networks import PostgresDsn, AmqpDsn
+from pydantic.networks import PostgresDsn, AmqpDsn, RedisDsn
 
 
 class Config(BaseSettings):
@@ -66,6 +66,22 @@ class Config(BaseSettings):
             password=values.get("RABBITMQ_PASSWORD"),
             host=values.get("RABBITMQ_HOST"),
             port=values.get("RABBITMQ_PORT"),
+        )
+
+    REDIS_HOST: str
+    REDIS_PORT: str
+    REDIS_URL: Optional[RedisDsn] = None
+
+    @validator("REDIS_URL", pre=True)
+    def assemble_redis_connection(
+            cls, v: Optional[str], values: Dict[str, Any]
+    ) -> Any:
+        if isinstance(v, str):
+            return v
+        return RedisDsn.build(
+            scheme="redis",
+            host=values.get("REDIS_HOST"),
+            port=values.get("REDIS_PORT"),
         )
 
     EMAIL_RESET_TOKEN_EXPIRE_HOURS: int = 8
