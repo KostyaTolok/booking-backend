@@ -3,8 +3,8 @@ from django.db.models.signals import post_delete
 
 
 class HotelsConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'hotels'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "hotels"
 
     def ready(self):
         from hotels import signals

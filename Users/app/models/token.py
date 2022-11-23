@@ -16,7 +16,9 @@ class Token(Base):
     expires_at = Column(DateTime)
 
     user = relationship("User", cascade="all,delete", backref="tokens")
-    blacklist = relationship("BlacklistedToken", cascade="all,delete", backref="token", uselist=False)
+    blacklist = relationship(
+        "BlacklistedToken", cascade="all,delete", backref="token", uselist=False
+    )
 
 
 class BlacklistedToken(Base):

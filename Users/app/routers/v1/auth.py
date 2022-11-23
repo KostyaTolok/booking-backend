@@ -12,40 +12,38 @@ router = APIRouter(tags=["login"])
 
 @router.post("/login", response_model=schemas.Tokens)
 async def login(
-        db: Session = Depends(dependencies.get_db),
-        *,
-        login_data: schemas.Login,
+    db: Session = Depends(dependencies.get_db),
+    *,
+    login_data: schemas.Login,
 ):
-    user = UserService.authenticate(db, username=login_data.email, password=login_data.password)
+    user = UserService.authenticate(
+        db, username=login_data.email, password=login_data.password
+    )
     tokens = await AuthService.get_access_refresh_tokens(
-        db,
-        user_id=user.id,
-        user_email=user.email,
-        user_active=user.is_active
+        db, user_id=user.id, user_email=user.email, user_active=user.is_active
     )
     return {**tokens, "token_type": "bearer"}
 
 
 @router.post("/login/form", response_model=schemas.Tokens)
 async def login(
-        db: Session = Depends(dependencies.get_db),
-        *,
-        login_data: OAuth2PasswordRequestForm = Depends(),
+    db: Session = Depends(dependencies.get_db),
+    *,
+    login_data: OAuth2PasswordRequestForm = Depends(),
 ):
-    user = UserService.authenticate(db, username=login_data.username, password=login_data.password)
+    user = UserService.authenticate(
+        db, username=login_data.username, password=login_data.password
+    )
     tokens = await AuthService.get_access_refresh_tokens(
-        db,
-        user_id=user.id,
-        user_email=user.email,
-        user_active=user.is_active
+        db, user_id=user.id, user_email=user.email, user_active=user.is_active
     )
     return {**tokens, "token_type": "bearer"}
 
 
 @router.post("/refresh", response_model=schemas.Tokens)
 async def refresh_tokens(
-        db: Session = Depends(dependencies.get_db),
-        refresh_token: str = Body(..., embed=True),
+    db: Session = Depends(dependencies.get_db),
+    refresh_token: str = Body(..., embed=True),
 ):
     tokens = await AuthService.refresh_tokens(db, refresh_token=refresh_token)
     return {**tokens, "token_type": "bearer"}

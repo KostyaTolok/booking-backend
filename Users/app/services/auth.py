@@ -4,7 +4,9 @@ from app.core.utils.security.jwt import tokens
 
 class AuthService:
     @staticmethod
-    async def get_access_refresh_tokens(db, *, user_id: int, user_email: str, user_active: bool) -> dict:
+    async def get_access_refresh_tokens(
+        db, *, user_id: int, user_email: str, user_active: bool
+    ) -> dict:
         access = tokens.AccessToken().for_user(subject=user_id)
         access["role"] = "user"
         access["active"] = user_active

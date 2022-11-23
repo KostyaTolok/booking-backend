@@ -23,20 +23,20 @@ class RoomsViewSet(
     viewsets.GenericViewSet,
 ):
     serializer_classes = {
-        'list': RoomListSerializer,
-        'retrieve': RoomSerializer,
-        'create': RoomSerializer,
-        'update': RoomSerializer,
-        'destroy': RoomSerializer,
-        'default': RoomSerializer,
+        "list": RoomListSerializer,
+        "retrieve": RoomSerializer,
+        "create": RoomSerializer,
+        "update": RoomSerializer,
+        "destroy": RoomSerializer,
+        "default": RoomSerializer,
     }
     permission_classes = {
-        'list': (AllowAny,),
-        'retrieve': (AllowAny,),
-        'create': (IsAdmin,),
-        'update': (IsAdmin | IsRoomOwner,),
-        'destroy': (IsAdmin | IsRoomOwner,),
-        'default': (IsAuthenticated,),
+        "list": (AllowAny,),
+        "retrieve": (AllowAny,),
+        "create": (IsAdmin,),
+        "update": (IsAdmin | IsRoomOwner,),
+        "destroy": (IsAdmin | IsRoomOwner,),
+        "default": (IsAuthenticated,),
     }
     queryset = Room.objects.all()
     filter_backends = (DjangoFilterBackend,)
@@ -55,7 +55,7 @@ class RoomImagesViewSet(
     permission_classes = {
         "create": (IsAdmin | IsRoomOwner,),
         "destroy": (IsAdmin | IsRoomOwner,),
-        'default': (IsAdmin,),
+        "default": (IsAdmin,),
     }
 
     def get_queryset(self):

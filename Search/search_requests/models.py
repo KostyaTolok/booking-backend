@@ -22,4 +22,4 @@ class SearchRequest(Document):
     created_at = fields.DateTimeField(default=datetime.datetime.now)
     user = fields.IntField(min_value=0)
 
-    meta = {'collection': 'search_requests'}
+    meta = {"collection": "search_requests"}

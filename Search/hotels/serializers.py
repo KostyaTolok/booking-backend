@@ -13,10 +13,15 @@ class HotelImageSerializer(serializers.ModelSerializer):
 
 class HotelSerializer(serializers.ModelSerializer):
     image_files = serializers.ListField(
-        child=serializers.ImageField(use_url=True), required=False, allow_empty=True, write_only=True
+        child=serializers.ImageField(use_url=True),
+        required=False,
+        allow_empty=True,
+        write_only=True,
     )
     images = HotelImageSerializer(many=True, read_only=True)
-    rating = serializers.DecimalField(min_value=0, max_value=10, max_digits=3, decimal_places=1)
+    rating = serializers.DecimalField(
+        min_value=0, max_value=10, max_digits=3, decimal_places=1
+    )
     city_name = serializers.CharField(source="city.name", read_only=True)
 
     class Meta:
@@ -38,7 +43,7 @@ class HotelSerializer(serializers.ModelSerializer):
             "longitude",
             "owner",
         )
-        extra_kwargs = {"city": {'write_only': True}}
+        extra_kwargs = {"city": {"write_only": True}}
         read_only_fields = ("owner",)
 
     def create(self, validated_data):
@@ -46,18 +51,33 @@ class HotelSerializer(serializers.ModelSerializer):
         request = self.context.get("request")
         user_id = request.user.get("user_id")
         hotel = Hotel.objects.create(**validated_data, owner=user_id)
-        HotelImage.objects.bulk_create((HotelImage(image_key=image_file, hotel=hotel) for image_file in image_files))
+        HotelImage.objects.bulk_create(
+            (
+                HotelImage(image_key=image_file, hotel=hotel)
+                for image_file in image_files
+            )
+        )
         return hotel
 
 
 class HotelListSerializer(serializers.ModelSerializer):
-    min_price = serializers.DecimalField(allow_null=True, read_only=True, max_digits=6, decimal_places=2)
+    min_price = serializers.DecimalField(
+        allow_null=True, read_only=True, max_digits=6, decimal_places=2
+    )
     first_image = serializers.SerializerMethodField(allow_null=True)
     city_name = serializers.CharField(source="city.name")
 
     class Meta:
         model = Hotel
-        fields = ("id", "name", "first_image", "description", "rating", "min_price", "city_name")
+        fields = (
+            "id",
+            "name",
+            "first_image",
+            "description",
+            "rating",
+            "min_price",
+            "city_name",
+        )
 
     def get_first_image(self, obj):
         image = obj.images.first()

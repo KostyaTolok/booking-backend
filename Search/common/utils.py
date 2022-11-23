@@ -7,7 +7,7 @@ from drf_yasg.generators import OpenAPISchemaGenerator
 
 def path_and_rename(instance, filename, path):
     _, extension = os.path.splitext(filename)
-    filename = f'{uuid4().hex}{extension}'
+    filename = f"{uuid4().hex}{extension}"
     return os.path.join(path, filename)
 
 
