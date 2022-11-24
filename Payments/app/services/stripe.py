@@ -1,8 +1,10 @@
 import asyncio
+import logging
 from decimal import Decimal
 from typing import List
 
 from async_stripe import stripe
+from fastapi import HTTPException, status
 
 from app import schemas
 from app.core.config import config
@@ -63,11 +65,25 @@ class StripeService:
         payload: bytes,
         signature: str,
     ):
-        return stripe.Webhook.construct_event(
-            payload=payload,
-            sig_header=signature,
-            secret=config.STRIPE_WEBHOOK_SECRET,
-        )
+        try:
+            event = stripe.Webhook.construct_event(
+                payload=payload,
+                sig_header=signature,
+                secret=config.STRIPE_WEBHOOK_SECRET,
+            )
+        except ValueError as e:
+            logging.info(f"Webhook invalid payload. {payload}")
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Webhook invalid payload",
+            )
+        except stripe.error.SignatureVerificationError as e:
+            logging.info(f"Webhook invalid signature.")
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid signature",
+            )
+        return event
 
     @staticmethod
     async def cancel_payment_intent(payment_intent_id: str):
