@@ -1,10 +1,12 @@
 import asyncio
+import logging
 from decimal import Decimal
 from typing import List
 
 from async_stripe import stripe
 
 from app import schemas
+from app.core import exceptions
 from app.core.config import config
 
 stripe.api_key = config.STRIPE_SECRET_KEY
@@ -37,7 +39,7 @@ class StripeService:
         )
 
     @staticmethod
-    async def create_payment_sheet(
+    async def crete_payment_sheet(
         user_id: int,
         customer_email: str,
         price: Decimal,
@@ -63,11 +65,23 @@ class StripeService:
         payload: bytes,
         signature: str,
     ):
-        return stripe.Webhook.construct_event(
-            payload=payload,
-            sig_header=signature,
-            secret=config.STRIPE_WEBHOOK_SECRET,
-        )
+        try:
+            event = stripe.Webhook.construct_event(
+                payload=payload,
+                sig_header=signature,
+                secret=config.STRIPE_WEBHOOK_SECRET,
+            )
+        except ValueError as e:
+            logging.info(f"Webhook invalid payload. {payload}")
+            raise exceptions.BadRequestException(
+                message="Webhook invalid payload",
+            )
+        except stripe.error.SignatureVerificationError as e:
+            logging.info(f"Webhook invalid signature.")
+            raise exceptions.BadRequestException(
+                message="Invalid signature",
+            )
+        return event
 
     @staticmethod
     async def cancel_payment_intent(payment_intent_id: str):
