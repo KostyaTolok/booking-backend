@@ -28,6 +28,7 @@ urlpatterns = [
                 path("rooms/", include("rooms.urls")),
                 path("cities/", include("cities.urls")),
                 path("search-requests/", include("search_requests.urls")),
+                path("bookings/", include("booking.urls")),
             ]
         ),
     ),
