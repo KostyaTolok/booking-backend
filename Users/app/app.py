@@ -1,3 +1,5 @@
+import logging
+
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from starlette.middleware.cors import CORSMiddleware
@@ -30,6 +32,11 @@ async def run_migrations():
 
 @app.on_event("startup")
 async def startup():
+    logging.basicConfig(
+        level=logging.getLevelName(config.LOGGING_LEVEL),
+        format="[%(levelname)s] [%(asctime)s] [%(filename)s:%(lineno)d].[%(funcName)s()]: %(message)s",
+    )
+
     if config.BACKEND_CORS_ORIGINS:
         app.add_middleware(
             CORSMiddleware,
@@ -39,7 +46,6 @@ async def startup():
             allow_headers=["*"],
         )
 
-    # TODO run_migrations() broke logs
     await run_migrations()
 
 

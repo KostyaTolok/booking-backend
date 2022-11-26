@@ -71,6 +71,9 @@ class Config(BaseSettings):
 
     KAFKA_LOGGING: bool = False
 
+    ALEMBIC_LOGGING: bool = False
+    LOGGING_LEVEL: str = "INFO"
+
     class Config:
         env_file = ".env"
 
