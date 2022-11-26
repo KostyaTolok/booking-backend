@@ -33,8 +33,6 @@ class HotelFilter(django_filters.FilterSet):
                 distinct=True,
                 filter=(
                     (Q(rooms__bookings__start_date__gte=value.start) & Q(rooms__bookings__end_date__lte=value.stop))
-                    | (Q(rooms__bookings__start_date__lte=value.start) & Q(rooms__bookings__end_date__gte=value.stop))
-                    | (Q(rooms__bookings__start_date__gte=value.stop) & Q(rooms__bookings__end_date__lte=value.start))
                     | (Q(rooms__bookings__start_date__lte=value.stop) & Q(rooms__bookings__end_date__gte=value.start))
                 ),
             )
