@@ -73,4 +73,11 @@ class UserService:
 
     @staticmethod
     def delete_user(db, user_id: int) -> User:
-        return crud.user.remove(db, user_id)
+        user = crud.user.remove(db, user_id)
+
+        if not user:
+            raise exceptions.NotFoundException(
+                message="The user not found",
+            )
+
+        return user

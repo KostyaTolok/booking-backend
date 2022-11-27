@@ -3,6 +3,7 @@ from typing import Any, Dict, Generic, List, Optional, Type, TypeVar, Union
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
+from sqlalchemy import text
 
 from app.core.db import Base
 
@@ -16,7 +17,15 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         self.model = model
 
     def get(self, db: Session, id: Any) -> Optional[ModelType]:
-        return db.query(self.model).filter(self.model.id == id).first()
+        tablename = self.model.__tablename__
+        cols = [f'"{tablename}".{c} AS {self.model.__tablename__}_{c}'
+                for c in self.model.__table__.columns.keys()]
+        sql = f"""SELECT {", ".join(cols)}
+                  FROM "{tablename}"  WHERE "{tablename}".id = {id} LIMIT 1"""
+        stmt = db.query(self.model).from_statement(text(sql))
+        result = db.execute(stmt)
+
+        return result.scalars().one_or_none()
 
     def get_or_create(self, db: Session, *, obj_in: CreateSchemaType):
         obj_in_data = jsonable_encoder(obj_in)
@@ -34,15 +43,30 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     def get_multi(
         self, db: Session, *, skip: int = 0, limit: int = 100
     ) -> List[ModelType]:
-        return db.query(self.model).offset(skip).limit(limit).all()
+        tablename = self.model.__tablename__
+        cols = [f'"{tablename}".{c} AS {self.model.__tablename__}_{c}'
+                for c in self.model.__table__.columns.keys()]
+        sql = f"""SELECT {", ".join(cols)}
+                  FROM "{tablename}" 
+                  LIMIT {limit} OFFSET {skip}"""
+        stmt = db.query(self.model).from_statement(text(sql))
+        result = db.execute(stmt)
+
+        return result.scalars().all()
 
     def create(self, db: Session, *, obj_in: CreateSchemaType) -> ModelType:
-        obj_in_data = jsonable_encoder(obj_in)
-        db_obj = self.model(**obj_in_data)
-        db.add(db_obj)
+        obj_in_data = jsonable_encoder(obj_in, exclude_unset=True)
+        tablename = self.model.__tablename__
+        cols = [f'"{tablename}".{c} AS {self.model.__tablename__}_{c}'
+                for c in self.model.__table__.columns.keys()]
+        default_cols = {c.name: c.default.arg({}) if callable(c.default.arg) else c.default.arg for c in self.model.__table__.columns if c.default}
+        sql = f"""INSERT INTO "{tablename}" ({", ".join(list(obj_in_data.keys()) + list(default_cols.keys()))}) 
+                  VALUES ({", ".join(f"'{v}'" for v in list(obj_in_data.values()) + list(default_cols.values()))})
+                  RETURNING {", ".join(cols)}"""
+        stmt = db.query(self.model).from_statement(text(sql))
+        result = db.execute(stmt)
         db.commit()
-        db.refresh(db_obj)
-        return db_obj
+        return result.scalars().one()
 
     def update(
         self,
@@ -51,21 +75,31 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         db_obj: ModelType,
         obj_in: Union[UpdateSchemaType, Dict[str, Any]]
     ) -> ModelType:
-        obj_data = jsonable_encoder(db_obj)
         if isinstance(obj_in, dict):
             update_data = obj_in
         else:
             update_data = obj_in.dict(exclude_unset=True)
-        for field in obj_data:
-            if field in update_data:
-                setattr(db_obj, field, update_data[field])
-        db.add(db_obj)
+
+        tablename = self.model.__tablename__
+        cols = [f'"{tablename}".{c} AS {self.model.__tablename__}_{c}'
+                for c in self.model.__table__.columns.keys()]
+        sql = f"""UPDATE "{tablename}" 
+                  SET {", ".join(f"{k}='{v}'" for k, v in update_data.items())}
+                  WHERE "{tablename}".id = {db_obj.id}
+                  RETURNING {", ".join(cols)}"""
+        stmt = db.query(self.model).from_statement(text(sql))
+        result = db.execute(stmt)
         db.commit()
-        db.refresh(db_obj)
-        return db_obj
+        return result.scalars().one()
 
     def remove(self, db: Session, id: int) -> ModelType:
-        obj = db.query(self.model).get(id)
-        db.delete(obj)
+        tablename = self.model.__tablename__
+        cols = [f'"{tablename}".{c} AS {self.model.__tablename__}_{c}'
+                for c in self.model.__table__.columns.keys()]
+        sql = f"""DELETE FROM "{tablename}" 
+                   WHERE "{tablename}".id = {id}
+                   RETURNING {", ".join(cols)}"""
+        stmt = db.query(self.model).from_statement(text(sql))
+        result = db.execute(stmt)
         db.commit()
-        return obj
+        return result.scalars().one_or_none()
