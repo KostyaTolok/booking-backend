@@ -50,6 +50,11 @@ async def close_connections():
 
 @app.on_event("startup")
 async def startup():
+    logging.basicConfig(
+        level=config.LOGGING_LEVEL,
+        format="[%(levelname)s] [%(asctime)s] [%(filename)s:%(lineno)d].[%(funcName)s()]: %(message)s",
+    )
+
     if config.BACKEND_CORS_ORIGINS:
         app.add_middleware(
             CORSMiddleware,
@@ -63,7 +68,6 @@ async def startup():
 
     await remove_expired_payment_intents()
 
-    # TODO run_migrations() broke logs
     await run_migrations()
 
     if config.KAFKA_LOGGING:

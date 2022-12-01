@@ -87,11 +87,16 @@ class Config(BaseSettings):
     EMAIL_RESET_TOKEN_EXPIRE_HOURS: int = 8
     EMAIL_CONFIRMATION_CODE_EXPIRE_SECONDS: int = 120
 
+    ALEMBIC_LOGGING: bool = False
+    LOGGING_LEVEL: str = "INFO"
+
+    class Config:
+        env_file = ".env"
+
 
 class DevelopmentConfig(Config):
     DEBUG: str = True
     ENV: str = "development"
-    pass
 
 
 class ProductionConfig(Config):
