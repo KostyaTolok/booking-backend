@@ -1,4 +1,4 @@
-name: Deploy to EC2
+name: Deploy to GCP
 
 on:
   push:
@@ -13,7 +13,7 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v3
 
-      - name: Deploy to EC2 & Launch
+      - name: Deploy to GCP & Launch
         env:
           HOSTNAME: ${{ secrets.REMOTE_HOST }}
           USERNAME: ${{ secrets.REMOTE_USER }}
@@ -22,7 +22,6 @@ jobs:
         run: |
           echo "${PRIVATE_PEM_KEY}" > backend_server_key.pem
           chmod 400 backend_server_key.pem
-          chmod +x run-docker-local.sh
           rsync \
             --archive \
             --verbose \
@@ -31,4 +30,4 @@ jobs:
             --exclude={"*.pem","*.env","*/__pycache__","*/static/*"} \
             --rsh="ssh -o StrictHostKeyChecking=no -i backend_server_key.pem" \
             `pwd` ${USERNAME}@${HOSTNAME}:/home/${USERNAME}/
-          ssh -o StrictHostKeyChecking=no -i backend_server_key.pem ${USERNAME}@${HOSTNAME} "cd ${REPOSITORY_NAME}; ./run-docker-local.sh --build --detach"
+          ssh -o StrictHostKeyChecking=no -i backend_server_key.pem ${USERNAME}@${HOSTNAME} "cd ${REPOSITORY_NAME}; make run"

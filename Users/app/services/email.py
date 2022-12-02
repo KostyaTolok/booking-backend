@@ -16,7 +16,7 @@ async def send_reset_password_email(email: str, token: str) -> None:
 async def send_confirm_email(email: str, code: str) -> None:
     message = {
         "email": email,
-        "subject": "",
-        "text": code,
+        "subject": "PandaHose email confirmation",
+        "html": render_template("confirm-email.html", code=code),
     }
     await send_email(**message)

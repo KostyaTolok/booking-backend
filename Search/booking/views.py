@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -21,6 +23,6 @@ class BookingsViewSet(SerializerPermissionsMixin, viewsets.GenericViewSet):
     @action(detail=False, url_path="me", methods=["GET"])
     def get_my_bookings(self, request):
         user_id = request.user.get("user_id")
-        bookings = Booking.objects.filter(user=user_id)
+        bookings = Booking.objects.filter(user=user_id, start_date__gte=datetime.now())
         serializer = BookingSerializer(bookings, many=True)
         return Response(serializer.data, status.HTTP_200_OK)

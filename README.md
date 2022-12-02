@@ -12,14 +12,27 @@ To connect to the server use command below:
 ssh -i ~/.ssh/key superemail003@34.27.180.91 -o StrictHostKeyChecking=no
 ```
 
-To re-run containers use these commands on server:
-```shell
-cd booking-backend/
-./run-docker-local.sh --build -d
+Firstly, open project directory
+```
+cd booking-backend
 ```
 
-To stop contaners use:
+To re-run containers use this command on server:
 ```shell
-cd booking-backend/
-./stop-docker-local.sh
+make run
+```
+
+To stop containers:
+```shell
+make stop
+```
+
+To show logs:
+```shell
+make logs
+```
+
+To show logs for specific service:
+```shell
+make logs service=<service_name>
 ```
