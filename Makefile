@@ -7,8 +7,8 @@ stop:
 
 run: stop
 	docker network create shared-kafka; \
-    docker-compose $(FILES) up --build --detach; \
-    docker system prune --volumes -f;
+	docker-compose $(FILES) up --build --detach; \
+	docker system prune --volumes -f;
 
 logs:
 	docker-compose $(FILES) logs -f $(service)
