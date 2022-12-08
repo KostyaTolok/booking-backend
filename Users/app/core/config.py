@@ -25,6 +25,7 @@ class Config(BaseSettings):
     USERS_OPEN_REGISTRATION: bool = False
 
     MOBILE_URL_SCHEMA = "booking-mobile"
+    PROJECT_NAME = "PandaHouse"
 
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str
@@ -73,9 +74,7 @@ class Config(BaseSettings):
     REDIS_URL: Optional[RedisDsn] = None
 
     @validator("REDIS_URL", pre=True)
-    def assemble_redis_connection(
-            cls, v: Optional[str], values: Dict[str, Any]
-    ) -> Any:
+    def assemble_redis_connection(cls, v: Optional[str], values: Dict[str, Any]) -> Any:
         if isinstance(v, str):
             return v
         return RedisDsn.build(

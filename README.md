@@ -4,22 +4,35 @@ Use `key` provided by one of the devs. Move it to .ssh folder.
 
 Set the lowest permission for it (**400** - read-only for owner):
 ```shell
-chmod 400 ~/.ssh/key
+chmod 400 ~/.ssh/booking_id_ed25519
 ```
 
 To connect to the server use command below:
 ```shell
-ssh -i ~/.ssh/key superemail003@34.27.180.91 -o StrictHostKeyChecking=no
+ssh -i booking_id_ed25519 booking@34.118.59.44 -o StrictHostKeyChecking=no
 ```
 
-To re-run containers use these commands on server:
+Firstly, open project directory
 ```shell
-cd booking-backend/
-./run-docker-local.sh --build -d
+cd booking-backend
 ```
 
-To stop contaners use:
+To re-run containers use this command on server:
 ```shell
-cd booking-backend/
-./stop-docker-local.sh
+make run
+```
+
+To stop containers:
+```shell
+make stop
+```
+
+To show logs:
+```shell
+make logs
+```
+
+To show logs for specific service:
+```shell
+make logs service=<service_name>
 ```
