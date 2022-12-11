@@ -3,6 +3,7 @@ import logging
 import threading
 
 import pika
+from django.db import connection as db_connection
 
 
 class Consumer(threading.Thread):
@@ -39,13 +40,32 @@ class Consumer(threading.Thread):
             message = json.loads(body.decode())
             self.logger.info(f"Booking received: {message}")
             room_id = message.pop("apartment_id", None)
-            room = Room.objects.get(id=room_id)
-            Booking.objects.create(
-                user=message.get("user_id"),
-                start_date=message.get("start_date"),
-                end_date=message.get("end_date"),
-                succeeded_at=message.get("succeeded_at"),
-                room=room,
+            rooms = Room.objects.raw(
+                """
+                SELECT
+                    id
+                FROM
+                    rooms_room
+                WHERE
+                    id = %s
+                """,
+                [room_id],
             )
+            room_id = rooms[0].id if rooms else None
+
+            with db_connection.cursor() as cursor:
+                cursor.execute(
+                    """
+                    INSERT INTO booking_booking (user, start_date, end_date, succeeded_at, room_id)
+                    VALUES (%s, %s, %s, %s)
+                    """,
+                    [
+                        message.get("user_id"),
+                        message.get("start_date"),
+                        message.get("end_date"),
+                        message.get("succeeded_at"),
+                        room_id,
+                    ],
+                )
         except Exception as e:
             self.logger.error(e)

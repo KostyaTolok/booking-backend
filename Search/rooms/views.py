@@ -1,3 +1,4 @@
+from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import mixins, viewsets, status
@@ -10,42 +11,59 @@ from rooms.filters import RoomFilter
 from rooms.models import Room, RoomImage
 from rooms.permissions import IsRoomOwner
 from rooms.serializers import RoomListSerializer, RoomSerializer, RoomImageSerializer
-from rooms.services import add_room_image
 
 
 class RoomsViewSet(
     mixins.ListModelMixin,
-    mixins.CreateModelMixin,
     mixins.RetrieveModelMixin,
-    mixins.UpdateModelMixin,
-    mixins.DestroyModelMixin,
     SerializerPermissionsMixin,
     viewsets.GenericViewSet,
 ):
     serializer_classes = {
         "list": RoomListSerializer,
         "retrieve": RoomSerializer,
-        "create": RoomSerializer,
-        "update": RoomSerializer,
-        "destroy": RoomSerializer,
         "default": RoomSerializer,
     }
     permission_classes = {
         "list": (AllowAny,),
         "retrieve": (AllowAny,),
-        "create": (IsAdmin,),
-        "update": (IsAdmin | IsRoomOwner,),
-        "destroy": (IsAdmin | IsRoomOwner,),
         "default": (IsAuthenticated,),
     }
-    queryset = Room.objects.all()
-    filter_backends = (DjangoFilterBackend,)
-    filterset_class = RoomFilter
+
+    def get_queryset(self):
+        return Room.objects.raw(
+            """
+            SELECT
+                id, name, description,
+                price, hotel_id
+            FROM
+                rooms_room AS room
+            """
+        )
+
+    def get_object(self):
+        rooms = Room.objects.raw(
+            """
+            SELECT
+                id, name, description,
+                price, beds_number, rooms_number,
+                equipment_state, has_washing_machine,
+                has_kitchen, hotel_id
+            FROM
+                rooms_room
+            WHERE
+                id = %s
+            """,
+            [self.kwargs[self.lookup_field]],
+        )
+        if rooms:
+            return rooms[0]
+        else:
+            raise Http404("Not found")
 
 
 class RoomImagesViewSet(
-    mixins.CreateModelMixin,
-    mixins.DestroyModelMixin,
+    mixins.ListModelMixin,
     SerializerPermissionsMixin,
     viewsets.GenericViewSet,
 ):
@@ -53,19 +71,23 @@ class RoomImagesViewSet(
         "default": RoomImageSerializer,
     }
     permission_classes = {
-        "create": (IsAdmin | IsRoomOwner,),
-        "destroy": (IsAdmin | IsRoomOwner,),
+        "list": (AllowAny,),
         "default": (IsAdmin,),
     }
 
     def get_queryset(self):
-        room_id = self.kwargs.get("room_pk")
-        room = get_object_or_404(Room, id=room_id)
-        return RoomImage.objects.filter(room=room)
-
-    def create(self, request, *args, **kwargs):
-        room_image = request.FILES.get("image_file")
-        room_id = kwargs.get("room_pk")
-        image = add_room_image(room_id, room_image)
-        serializer = RoomImageSerializer(image)
-        return Response(serializer.data, status.HTTP_201_CREATED)
+        return RoomImage.objects.raw(
+            """
+            SELECT
+                image.id, image.image_key, image.room_id
+            FROM
+                rooms_roomimage as image
+            JOIN
+                rooms_room as room
+            ON
+                image.room_id = room.id
+            WHERE
+                room.id = %s
+            """,
+            [self.kwargs.get("room_pk")],
+        )
