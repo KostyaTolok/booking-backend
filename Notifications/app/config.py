@@ -37,6 +37,10 @@ class Config(BaseSettings):
     EMAILS_FROM_EMAIL: EmailStr = os.getenv("EMAIL")
     EMAILS_FROM_NAME: Optional[str] = None
 
+    CENTRIFUGO_API_URL: AnyHttpUrl
+    CENTRIFUGO_API_KEY: str
+    CENTRIFUGO_CHAT_NAMESPACE_NAME: str = "notifications"
+
 
 class DevelopmentConfig(Config):
     ENV: str = "development"

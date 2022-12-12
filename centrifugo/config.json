@@ -1,0 +1,18 @@
+{
+    "port": 8000,
+    "engine": "redis",
+    "redis_address": "redis://redis:6379",
+    "allowed_origins": [
+      "*"
+    ],
+    "proxy_http_headers": ["Cookie"],
+    "namespaces": [
+        {
+          "name": "notifications",
+          "allow_user_limited_channels": true,
+          "presence": true,
+          "history_size": 10,
+          "history_ttl": "300s"
+        }
+    ]
+}
