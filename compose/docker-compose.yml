@@ -34,6 +34,24 @@ services:
       - "6379"
     networks:
       - redis
+  centrifugo:
+    image: centrifugo/centrifugo
+    env_file:
+      - ../centrifugo/.env
+    volumes:
+      - ../centrifugo/:/centrifugo/
+    command: centrifugo -c config.json
+    ports:
+      - "8080:8000"
+    ulimits:
+      nofile:
+        soft: 65535
+        hard: 65535
+    networks:
+      - centrifugo
+      - redis
+    depends_on:
+      - redis
 
 networks:
   web:
@@ -45,3 +63,6 @@ networks:
   redis:
     driver: bridge
     name: shared-redis
+  centrifugo:
+    driver: bridge
+    name: shared-centrifugo
