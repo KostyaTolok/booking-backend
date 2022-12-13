@@ -7,7 +7,9 @@ class AuthService:
     async def get_access_refresh_tokens(
         db, *, user_id: int, user_email: str, user_active: bool
     ) -> dict:
-        access = tokens.AccessToken().for_user(subject=user_id)
+        subject = str(user_id)
+
+        access = tokens.AccessToken().for_user(subject=subject)
         access["role"] = "user"
         access["active"] = user_active
         access["email"] = user_email
@@ -16,7 +18,7 @@ class AuthService:
         if last_token:
             tokens.RefreshToken(db, token=last_token, verify=False).blacklist()
 
-        refresh = tokens.RefreshToken(db).for_user(subject=user_id)
+        refresh = tokens.RefreshToken(db).for_user(subject=subject)
 
         return {"access_token": str(access), "refresh_token": str(refresh)}
 
