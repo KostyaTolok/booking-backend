@@ -3,7 +3,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 import mongoengine
 
-load_dotenv(".env.local")
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -18,6 +18,7 @@ JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False").lower() == "true"
+ENVIRONMENT = os.getenv("ENV", "Dev")
 
 ALLOWED_HOSTS = [str(host) for host in str(os.getenv("ALLOWED_HOSTS")).split()]
 
@@ -132,6 +133,12 @@ LOGGING = {
     "root": {
         "handlers": ["console"],
         "level": "INFO",
+    },
+    "loggers": {
+        'django.db.backends': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
     },
 }
 

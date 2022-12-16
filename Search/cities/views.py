@@ -9,10 +9,6 @@ from common.permissions import IsAdmin, IsAuthenticated
 
 class CitiesViewSet(
     mixins.ListModelMixin,
-    mixins.CreateModelMixin,
-    mixins.RetrieveModelMixin,
-    mixins.UpdateModelMixin,
-    mixins.DestroyModelMixin,
     SerializerPermissionsMixin,
     viewsets.GenericViewSet,
 ):
@@ -23,4 +19,13 @@ class CitiesViewSet(
         "list": (AllowAny,),
         "default": (IsAdmin,),
     }
-    queryset = City.objects.all()
+
+    def get_queryset(self):
+        return City.objects.raw(
+            """
+            SELECT
+                id, name
+            FROM
+                cities_city
+            """
+        )

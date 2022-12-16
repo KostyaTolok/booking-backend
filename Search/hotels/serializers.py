@@ -18,11 +18,9 @@ class HotelSerializer(serializers.ModelSerializer):
         allow_empty=True,
         write_only=True,
     )
-    images = HotelImageSerializer(many=True, read_only=True)
-    rating = serializers.DecimalField(
-        min_value=0, max_value=10, max_digits=3, decimal_places=1
-    )
-    city_name = serializers.CharField(source="city.name", read_only=True)
+    images = serializers.SerializerMethodField(read_only=True)
+    rating = serializers.DecimalField(min_value=0, max_value=10, max_digits=3, decimal_places=1)
+    city_name = serializers.CharField(read_only=True)
 
     class Meta:
         model = Hotel
@@ -46,26 +44,28 @@ class HotelSerializer(serializers.ModelSerializer):
         extra_kwargs = {"city": {"write_only": True}}
         read_only_fields = ("owner",)
 
-    def create(self, validated_data):
-        image_files = validated_data.pop("image_files", [])
-        request = self.context.get("request")
-        user_id = request.user.get("user_id")
-        hotel = Hotel.objects.create(**validated_data, owner=user_id)
-        HotelImage.objects.bulk_create(
-            (
-                HotelImage(image_key=image_file, hotel=hotel)
-                for image_file in image_files
-            )
+    def get_images(self, obj):
+        images = HotelImage.objects.raw(
+            """
+            SELECT
+                image.id, image.image_key, image.hotel_id
+            FROM
+                hotels_hotelimage as image
+            WHERE
+                image.hotel_id = %s
+            ORDER BY
+                image.id ASC
+            """,
+            [obj.id],
         )
-        return hotel
+        serializer = HotelImageSerializer(images, many=True)
+        return serializer.data
 
 
 class HotelListSerializer(serializers.ModelSerializer):
-    min_price = serializers.DecimalField(
-        allow_null=True, read_only=True, max_digits=6, decimal_places=2
-    )
-    first_image = serializers.SerializerMethodField(allow_null=True)
-    city_name = serializers.CharField(source="city.name")
+    min_price = serializers.DecimalField(allow_null=True, read_only=True, max_digits=6, decimal_places=2)
+    first_image = serializers.SerializerMethodField(allow_null=True, read_only=True)
+    city_name = serializers.CharField(read_only=True)
 
     class Meta:
         model = Hotel
@@ -80,8 +80,21 @@ class HotelListSerializer(serializers.ModelSerializer):
         )
 
     def get_first_image(self, obj):
-        image = obj.images.first()
-        return image.image_key.url if image else None
+        images = HotelImage.objects.raw(
+            """
+            SELECT
+                image.id, image.image_key
+            FROM
+                hotels_hotelimage as image
+            WHERE
+                image.hotel_id = %s
+            ORDER BY
+                image.id
+            ASC LIMIT 1
+            """,
+            [obj.id],
+        )
+        return images[0].image_key.url if images else None
 
 
 class HotelViewSerializer(serializers.ModelSerializer):
@@ -89,4 +102,4 @@ class HotelViewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = HotelView
-        fields = ("id", "hotel")
+        fields = ("id", "hotel", "date")
