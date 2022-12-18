@@ -1,0 +1,12 @@
+version: "3.9"
+
+services:
+  iot-logs:
+    build: ../IoTLogs/
+    container_name: iot-logs
+    env_file:
+      - ../IoTLogs/.env
+    expose:
+      - "9000"
+    volumes:
+      - "../IoTLogs:/app"
