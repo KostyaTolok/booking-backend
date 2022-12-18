@@ -1,7 +1,7 @@
 version: "3.9"
 
 services:
-  ngninx:
+  nginx:
     image: nginx:1.23.2-alpine
     container_name: nginx
     volumes:
@@ -15,6 +15,7 @@ services:
       - users
       - search
       - payments
+      - iot-logs
   rabbitmq:
     image: rabbitmq:3.9-management-alpine
     container_name: 'rabbitmq'

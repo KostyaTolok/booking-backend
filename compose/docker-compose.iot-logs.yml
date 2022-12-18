@@ -6,7 +6,17 @@ services:
     container_name: iot-logs
     env_file:
       - ../IoTLogs/.env
+    networks:
+      - iot-logs
+      - web
     expose:
       - "9000"
     volumes:
       - "../IoTLogs:/app"
+
+networks:
+  web:
+    external: true
+    name: shared-web
+  iot-logs:
+    driver: bridge
