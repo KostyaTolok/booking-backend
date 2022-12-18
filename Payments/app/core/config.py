@@ -53,7 +53,8 @@ class Config(BaseSettings):
     RABBITMQ_PASSWORD: str
     RABBITMQ_URL: Optional[AmqpDsn]
 
-    RABBITMQ_PAYMENT_EVENTS_EXCHANGE_NAME: str
+    RABBITMQ_PAYMENT_EVENTS_EXCHANGE_NAME: str = "payments"
+    RABBITMQ_NOTIFICATIONS_QUEUE_NAME: str = "notifications"
 
     @validator("RABBITMQ_URL")
     def assemble_rabbit_connection(
