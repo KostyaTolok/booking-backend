@@ -18,7 +18,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
 
     def get(self, db: Session, id: Any) -> Optional[ModelType]:
         tablename = self.model.__tablename__
-        cols = [f'"{tablename}".{c} AS {self.model.__tablename__}_{c}'
+        cols = [f'"{tablename}".{c} AS {tablename}_{c}'
                 for c in self.model.__table__.columns.keys()]
         sql = f"""SELECT {", ".join(cols)}
                   FROM "{tablename}"  WHERE "{tablename}".id = {id} LIMIT 1"""
@@ -44,7 +44,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         self, db: Session, *, skip: int = 0, limit: int = 100
     ) -> List[ModelType]:
         tablename = self.model.__tablename__
-        cols = [f'"{tablename}".{c} AS {self.model.__tablename__}_{c}'
+        cols = [f'"{tablename}".{c} AS {tablename}_{c}'
                 for c in self.model.__table__.columns.keys()]
         sql = f"""SELECT {", ".join(cols)}
                   FROM "{tablename}" 
@@ -57,9 +57,10 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     def create(self, db: Session, *, obj_in: CreateSchemaType) -> ModelType:
         obj_in_data = jsonable_encoder(obj_in, exclude_unset=True)
         tablename = self.model.__tablename__
-        cols = [f'"{tablename}".{c} AS {self.model.__tablename__}_{c}'
+        cols = [f'"{tablename}".{c} AS {tablename}_{c}'
                 for c in self.model.__table__.columns.keys()]
-        default_cols = {c.name: c.default.arg({}) if callable(c.default.arg) else c.default.arg for c in self.model.__table__.columns if c.default}
+        default_cols = {c.name: c.default.arg({}) if callable(c.default.arg) else c.default.arg
+                        for c in self.model.__table__.columns if c.default}
         sql = f"""INSERT INTO "{tablename}" ({", ".join(list(obj_in_data.keys()) + list(default_cols.keys()))}) 
                   VALUES ({", ".join(f"'{v}'" for v in list(obj_in_data.values()) + list(default_cols.values()))})
                   RETURNING {", ".join(cols)}"""
@@ -81,7 +82,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
             update_data = obj_in.dict(exclude_unset=True)
 
         tablename = self.model.__tablename__
-        cols = [f'"{tablename}".{c} AS {self.model.__tablename__}_{c}'
+        cols = [f'"{tablename}".{c} AS {tablename}_{c}'
                 for c in self.model.__table__.columns.keys()]
         sql = f"""UPDATE "{tablename}" 
                   SET {", ".join(f"{k}='{v}'" for k, v in update_data.items())}
@@ -94,7 +95,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
 
     def remove(self, db: Session, id: int) -> ModelType:
         tablename = self.model.__tablename__
-        cols = [f'"{tablename}".{c} AS {self.model.__tablename__}_{c}'
+        cols = [f'"{tablename}".{c} AS {tablename}_{c}'
                 for c in self.model.__table__.columns.keys()]
         sql = f"""DELETE FROM "{tablename}" 
                    WHERE "{tablename}".id = {id}

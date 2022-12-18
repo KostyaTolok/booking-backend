@@ -1,6 +1,7 @@
 from typing import Any, Dict, Optional, Union
 
 from sqlalchemy.orm import Session
+from sqlalchemy import text
 
 from app.core.utils.security.password import get_password_hash, verify_password
 from app.crud.base import CRUDBase
@@ -10,18 +11,26 @@ from app.schemas.user import UserCreate, UserUpdate
 
 class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
     def get_by_email(self, db: Session, *, email: str) -> Optional[User]:
-        return db.query(User).filter(User.email == email).first()
+        tablename = self.model.__tablename__
+        sql = f"""SELECT *
+                  FROM "{tablename}" 
+                  WHERE "{tablename}".email = '{email}'
+                  LIMIT 1"""
+        stmt = db.query(self.model).from_statement(text(sql))
+        result = db.execute(stmt)
+        db.commit()
+        return result.scalars().one_or_none()
 
     def create(self, db: Session, *, obj_in: UserCreate) -> User:
-        db_obj = User(
-            email=obj_in.email,
-            hashed_password=get_password_hash(obj_in.password),
-            full_name=obj_in.full_name,
+        data = {
+            "email": obj_in.email,
+            "hashed_password": get_password_hash(obj_in.password),
+            "full_name": obj_in.full_name,
+        }
+        return super().create(
+            db,
+            obj_in=data,
         )
-        db.add(db_obj)
-        db.commit()
-        db.refresh(db_obj)
-        return db_obj
 
     def update(
         self, db: Session, *, db_obj: User, obj_in: Union[UserUpdate, Dict[str, Any]]
