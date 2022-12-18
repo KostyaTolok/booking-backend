@@ -2,7 +2,6 @@ from typing import Optional
 
 import aiohttp
 
-
 SIZE_POOL_AIOHTTP = 100
 
 
@@ -12,7 +11,7 @@ class SingletonAiohttp:
     @classmethod
     def get_aiohttp_client(cls) -> aiohttp.ClientSession:
         if cls.aiohttp_client is None:
-            timeout = aiohttp.ClientTimeout(total=2)
+            timeout = aiohttp.ClientTimeout(total=5)
             connector = aiohttp.TCPConnector(limit_per_host=SIZE_POOL_AIOHTTP)
             cls.aiohttp_client = aiohttp.ClientSession(
                 timeout=timeout,

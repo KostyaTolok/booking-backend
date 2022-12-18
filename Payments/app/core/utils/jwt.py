@@ -3,7 +3,6 @@ from fastapi import HTTPException
 
 from app.core.config import config
 
-
 ALGORITHM = "HS256"
 
 
@@ -14,3 +13,7 @@ def decode_token(token: str):
         raise HTTPException(status_code=403, detail="Token is invalid or expired")
 
     return payload
+
+
+def encode_token(payload: dict):
+    return jwt.encode(payload, config.SECRET_KEY, algorithm=ALGORITHM)

@@ -1,8 +1,8 @@
 import os
-from typing import Optional, Dict, Any, Union, List
+from typing import Any, Dict, List, Optional, Union
 
-from pydantic import BaseSettings, AnyHttpUrl, validator
-from pydantic.networks import PostgresDsn, AmqpDsn, KafkaDsn
+from pydantic import AnyHttpUrl, BaseSettings, validator
+from pydantic.networks import AmqpDsn, KafkaDsn, PostgresDsn
 
 
 class Config(BaseSettings):
@@ -74,6 +74,10 @@ class Config(BaseSettings):
 
     ALEMBIC_LOGGING: bool = False
     LOGGING_LEVEL: str = "INFO"
+
+    COLLECT_BOOKINGS_LAMBDA_URL: str = (
+        "https://tmyjvl0g7l.execute-api.us-west-2.amazonaws.com/default/collectBookings"
+    )
 
     class Config:
         env_file = ".env"

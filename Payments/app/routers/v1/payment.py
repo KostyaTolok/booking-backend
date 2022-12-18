@@ -1,13 +1,13 @@
 import logging
 
-from fastapi import Header, Request, Depends, APIRouter
 from aiohttp import ClientSession
+from fastapi import APIRouter, Depends, Header, HTTPException, Request, status
 from sqlalchemy.orm import Session
 
-from app.routers.dependences import get_active_token_payload, get_db, get_http_client
 from app import schemas
-from app.services.payment import PaymentServices
+from app.routers.dependences import get_active_token_payload, get_db, get_http_client
 from app.services.apartment import ApartmentServices
+from app.services.payment import PaymentServices
 from app.services.stripe import StripeService
 
 router = APIRouter(tags=["payment"])
@@ -72,17 +72,22 @@ async def payment_sheet(
 @router.post("/webhook")
 async def webhook_received(
     db: Session = Depends(get_db),
+    client: ClientSession = Depends(get_http_client),
     *,
     request: Request,
     stripe_signature: str = Header(),
 ):
-    data = await request.body()
-    event = StripeService.construct_event(data, stripe_signature)
+    try:
+        data = await request.body()
+        event = StripeService.construct_event(data, stripe_signature)
 
-    logging.info(f"Received {event['type']} event.")
+        logging.info(f"Received {event['type']} event.")
 
-    if event["type"] == "payment_intent.succeeded":
-        payment_intent = event["data"]["object"]
-        await PaymentServices.confirm_payment(db, payment_intent["id"])
+        if event["type"] == "payment_intent.succeeded":
+            payment_intent = event["data"]["object"]
+            await PaymentServices.confirm_payment(db, client, payment_intent["id"])
 
-    return {"status": "success"}
+        return {"status": "success"}
+    except Exception as e:
+        logging.info(e)
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
