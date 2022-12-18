@@ -17,11 +17,9 @@ class RoomSerializer(serializers.ModelSerializer):
         allow_empty=True,
         write_only=True,
     )
-    images = RoomImageSerializer(many=True, read_only=True)
+    images = serializers.SerializerMethodField(read_only=True)
 
-    price = serializers.DecimalField(
-        min_value=0, max_value=1000, max_digits=6, decimal_places=2
-    )
+    price = serializers.DecimalField(min_value=0, max_value=1000, max_digits=6, decimal_places=2)
     beds_number = serializers.IntegerField(min_value=0, max_value=10)
 
     class Meta:
@@ -44,10 +42,25 @@ class RoomSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         image_files = validated_data.pop("image_files", [])
         room = Room.objects.create(**validated_data)
-        RoomImage.objects.bulk_create(
-            (RoomImage(image_key=image_file, room=room) for image_file in image_files)
-        )
+        RoomImage.objects.bulk_create((RoomImage(image_key=image_file, room=room) for image_file in image_files))
         return room
+
+    def get_images(self, obj):
+        images = RoomImage.objects.raw(
+            """
+            SELECT
+                image.id, image.image_key, image.room_id
+            FROM
+                rooms_roomimage as image
+            WHERE
+                image.room_id = %s
+            ORDER BY
+                image.id ASC
+            """,
+            [obj.id],
+        )
+        serializer = RoomImageSerializer(images, many=True)
+        return serializer.data
 
 
 class RoomListSerializer(serializers.ModelSerializer):
@@ -58,5 +71,18 @@ class RoomListSerializer(serializers.ModelSerializer):
         fields = ("id", "name", "first_image", "description", "price", "hotel")
 
     def get_first_image(self, obj):
-        image = obj.images.first()
-        return image.image_key.url if image else None
+        images = RoomImage.objects.raw(
+            """
+            SELECT
+                image.id, image.image_key
+            FROM
+                rooms_roomimage as image
+            WHERE
+                image.room_id = %s
+            ORDER BY
+                image.id
+            ASC LIMIT 1
+            """,
+            [obj.id],
+        )
+        return images[0].image_key.url if images else None

@@ -9,6 +9,7 @@ class BookingConfig(AppConfig):
     name = "booking"
 
     def ready(self):
-        consumer = Consumer(settings)
-        consumer.daemon = True
-        consumer.start()
+        if settings.ENVIRONMENT == "Prod":
+            consumer = Consumer(settings)
+            consumer.daemon = True
+            consumer.start()
