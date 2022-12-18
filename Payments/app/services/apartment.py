@@ -2,9 +2,9 @@ import logging
 from urllib.parse import urljoin
 
 import aiohttp
-from pydantic.error_wrappers import ValidationError
-from fastapi import HTTPException, status
 from aiohttp import ClientSession
+from fastapi import HTTPException, status
+from pydantic.error_wrappers import ValidationError
 
 from app import schemas
 from app.core.config import config

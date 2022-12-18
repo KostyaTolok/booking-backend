@@ -2,12 +2,14 @@ import logging
 from datetime import date
 from decimal import Decimal
 
+from aiohttp import ClientSession
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
-from app import schemas, models
+from app import models, schemas
 from app.crud.payment import PaymentCRUD
 from app.events import send_payment_event
+from app.lambdas import invoke_collect_bookings
 
 
 class PaymentServices:
@@ -44,6 +46,7 @@ class PaymentServices:
     @staticmethod
     async def confirm_payment(
         db: Session,
+        client: ClientSession,
         payment_intent_id: str,
     ):
         payment_db = PaymentCRUD.get_by_payment_intent_id(
@@ -69,6 +72,13 @@ class PaymentServices:
             "price": payment_db.price,
         }
         await send_payment_event(message)
+        await invoke_collect_bookings(
+            client,
+            user_id=payment_db.user_id,
+            apartment_id=payment_db.apartment_id,
+            start_date=payment_db.start_date,
+            end_date=payment_db.end_date,
+        )
 
         logging.info(
             f"Payment {payment_db.payment_intent_id} confirmed successfully. {message}"

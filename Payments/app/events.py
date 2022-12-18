@@ -1,7 +1,6 @@
 import json
 
-from aio_pika import Message, ExchangeType, DeliveryMode
-
+from aio_pika import DeliveryMode, ExchangeType, Message
 from app.core.amqp_connection import SingletonAmqp
 from app.core.config import config
 
