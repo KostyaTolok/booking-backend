@@ -9,8 +9,6 @@ class Config(BaseSettings):
     APP_HOST: str = "0.0.0.0"
     APP_PORT: int = 9000
 
-    LOGGING_LEVEL: str = "INFO"
-
     AWS_ACCESS_KEY_ID: str = ""
     AWS_SECRET_ACCESS_KEY: str = ""
     AWS_REGION_NAME: str = ""

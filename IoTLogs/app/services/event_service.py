@@ -12,7 +12,9 @@ class EventService:
 
     def get_all_logs(self):
         try:
-            response = self.logs_table.scan()
+            response = self.logs_table.scan(
+                Limit=100,
+            )
             return response["Items"]
         except Exception as e:
             raise CustomException(message=str(e))
@@ -20,7 +22,8 @@ class EventService:
     def get_logs_by_apartment_id(self, apartment_id):
         try:
             response = self.logs_table.query(
-                KeyConditionExpression=Key("apartment_id").eq(apartment_id)
+                KeyConditionExpression=Key("apartment_id").eq(apartment_id),
+                Limit=100,
             )
             return response["Items"]
         except Exception as e:
