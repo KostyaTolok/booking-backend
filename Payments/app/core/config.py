@@ -75,9 +75,7 @@ class Config(BaseSettings):
     ALEMBIC_LOGGING: bool = False
     LOGGING_LEVEL: str = "INFO"
 
-    COLLECT_BOOKINGS_LAMBDA_URL: str = (
-        "https://tmyjvl0g7l.execute-api.us-west-2.amazonaws.com/default/collectBookings"
-    )
+    COLLECT_BOOKINGS_LAMBDA_URL: str
 
     class Config:
         env_file = ".env"
