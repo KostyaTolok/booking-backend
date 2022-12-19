@@ -12,9 +12,12 @@ services:
       - notifications
       - web
       - rabbitmq
+      - centrifugo
     depends_on:
       rabbitmq:
         condition: "service_healthy"
+      centrifugo:
+        condition: "service_started"
 
 
 networks:
@@ -24,5 +27,8 @@ networks:
   rabbitmq:
     external: true
     name: shared-rabbitmq
+  centrifugo:
+    external: true
+    name: shared-centrifugo
   notifications:
     driver: bridge

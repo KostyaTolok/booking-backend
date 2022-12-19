@@ -8,9 +8,10 @@ from retrying_async import retry
 
 from config import config
 from send_email import send_email
+from send_notification import send_notification
 
 
-async def on_message(message: AbstractIncomingMessage) -> None:
+async def on_email_message(message: AbstractIncomingMessage) -> None:
     async with message.process():
         body = json.loads(message.body)
         try:
@@ -20,6 +21,19 @@ async def on_message(message: AbstractIncomingMessage) -> None:
                 subject=body["subject"],
                 html=body.get("html", ""),
                 text=body.get("text", ""),
+            )
+        except Exception as e:
+            logging.error(e)
+
+
+async def on_notification(message: AbstractIncomingMessage) -> None:
+    async with message.process():
+        body = json.loads(message.body)
+        try:
+            subject = body.pop("user_id")
+            send_notification(
+                subject=subject,
+                data=body,
             )
         except Exception as e:
             logging.error(e)
@@ -36,8 +50,13 @@ async def main() -> None:
     async with connection:
         channel = await connection.channel()
         await channel.set_qos(prefetch_count=10)
+
         queue = await channel.declare_queue("email")
-        await queue.consume(on_message)
+        await queue.consume(on_email_message)
+
+        queue = await channel.declare_queue("notifications")
+        await queue.consume(on_notification)
+
         await asyncio.Future()
 
 

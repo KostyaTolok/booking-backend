@@ -23,6 +23,7 @@ mongoengine = "*"
 django-rest-framework-mongoengine = "*"
 pika = "*"
 gunicorn = "*"
+retrying = "*"
 
 [dev-packages]
 

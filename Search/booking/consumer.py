@@ -3,6 +3,7 @@ import logging
 import threading
 
 import pika
+from retrying import retry
 from django.db import connection as db_connection
 
 
@@ -12,6 +13,7 @@ class Consumer(threading.Thread):
         self.logger = logging.getLogger(__name__)
         super().__init__()
 
+    @retry(stop_max_attempt_number=5, wait_fixed=2000)
     def run(self):
         parameters = pika.URLParameters(self.settings.BOOKING_BROKER_URL)
         connection = pika.BlockingConnection(parameters)
@@ -20,6 +22,7 @@ class Consumer(threading.Thread):
             self.settings.BOOKING_QUEUE_NAME,
             durable=True,
         )
+        channel.exchange_declare(exchange=self.settings.BOOKING_EXCHANGE_NAME, exchange_type="fanout", passive=True)
         channel.queue_bind(
             exchange=self.settings.BOOKING_EXCHANGE_NAME,
             queue=self.settings.BOOKING_QUEUE_NAME,
