@@ -3,12 +3,12 @@ FILES := -f compose/docker-compose.users.yml -f compose/docker-compose.notificat
 all: run
 
 stop:
-	docker-compose $(FILES) down
+	docker compose $(FILES) down
 
 run: stop
 	docker network create shared-kafka; \
-	docker-compose $(FILES) up --build --detach; \
+	docker compose $(FILES) up --build --detach; \
 	docker system prune --volumes -f;
 
 logs:
-	docker-compose $(FILES) logs -f $(service)
+	docker compose $(FILES) logs -f $(service)
